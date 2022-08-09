@@ -16,6 +16,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "../lib/mantine/Button";
 
@@ -80,24 +81,11 @@ const Home: NextPage = () => {
               <ActionIcon
                 variant="default"
                 onClick={() => {}}
-                size={30}
+                size="lg"
+                radius="md"
                 className="ml-auto"
               >
-                <svg
-                  width="19"
-                  height="19"
-                  viewBox="0 0 19 19"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.0001 1.25001C10.1211 1.25001 10.2411 1.25001 10.3603 1.25001C9.1827 2.34424 8.42576 3.81653 8.22107 5.41096C8.01638 7.00539 8.37687 8.62114 9.2399 9.97735C10.1029 11.3336 11.4139 12.3445 12.9449 12.8344C14.476 13.3242 16.1303 13.2621 17.6203 12.6588C17.0471 14.038 16.1104 15.2356 14.9099 16.1241C13.7094 17.0125 12.2903 17.5585 10.8039 17.7036C9.31748 17.8488 7.81954 17.5877 6.46987 16.9483C5.1202 16.3089 3.96941 15.3151 3.14026 14.0729C2.31111 12.8307 1.83471 11.3868 1.76187 9.89507C1.68902 8.40336 2.02247 6.91986 2.72664 5.60281C3.43082 4.28576 4.4793 3.18456 5.76025 2.41668C7.04121 1.6488 8.50658 1.24304 10.0001 1.24268V1.25001Z"
-                    stroke="#25262B"
-                    strokeWidth="1.83333"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Image src="/moon.svg" width={22} height={22} />
               </ActionIcon>
             </div>
           </Header>
