@@ -4,17 +4,20 @@ import {
   Aside,
   Box,
   Burger,
+  Center,
   Container,
   Footer,
   Header,
   MediaQuery,
   Navbar,
+  Stack,
   Text,
   Title,
   useMantineTheme,
 } from "@mantine/core";
 import type { NextPage } from "next";
 import { useState } from "react";
+import { Button } from "../lib/mantine/Button";
 
 const Home: NextPage = () => {
   const theme = useMantineTheme();
@@ -71,7 +74,7 @@ const Home: NextPage = () => {
                 />
               </MediaQuery>
 
-              <Text weight={700} className="mx-auto">
+              <Text size="lg" weight={700} className="mx-auto">
                 Takeyu IT University
               </Text>
               <ActionIcon
@@ -100,19 +103,52 @@ const Home: NextPage = () => {
           </Header>
         }
       >
-        <Box
-          className="h-64 py-14"
-          style={{ backgroundColor: theme.colors.pink[6] }}
-        >
-          <Container size="xs">
-            <Title order={2} className="text-white">
-              Takeyu IT University
-            </Title>
-            <Text size="md" className="text-white">
-              たけゆのポートフォリオのためのページです
-            </Text>
+        <Stack spacing={40}>
+          <Box
+            className="h-64 py-14"
+            style={{ backgroundColor: theme.colors.pink[6] }}
+          >
+            <Container size="xs">
+              <Title order={2} className="text-white">
+                Takeyu IT University
+              </Title>
+              <Text size="md" className="text-white">
+                たけゆのポートフォリオのためのページです
+              </Text>
+            </Container>
+          </Box>
+          <Container m={0}>
+            <Title order={2}>Blog</Title>
+            <Container p={0}>This is a header</Container>
           </Container>
-        </Box>
+          <Container m={0}>
+            <Title order={2}>Portfolio</Title>
+            <Container p={0}>IT KINGDOM</Container>
+            <Center>
+              <Button color="dark" radius="xl">
+                View All
+              </Button>
+            </Center>
+          </Container>
+          <Container m={0}>
+            <Title order={2}>GitHub</Title>
+            <Container p={0}>This is a GitHub content</Container>
+            <Center>
+              <Button color="dark" radius="xl">
+                View on GitHub
+              </Button>
+            </Center>
+          </Container>
+          <Container m={0}>
+            <Title order={2}>Twitter</Title>
+            <Container p={0}>This is a Twitter content</Container>
+            <Center>
+              <Button color="dark" radius="xl">
+                View on Twitter
+              </Button>
+            </Center>
+          </Container>
+        </Stack>
       </AppShell>
     </div>
   );
