@@ -10,6 +10,7 @@ import {
   Header,
   MediaQuery,
   Navbar,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -96,14 +97,23 @@ const Home: NextPage = () => {
             className="h-64 py-14"
             style={{ backgroundColor: theme.colors.pink[6] }}
           >
-            <Container size="xs">
-              <Title order={2} className="text-white">
-                Takeyu IT University
-              </Title>
-              <Text size="md" className="text-white">
-                たけゆのポートフォリオのためのページです
-              </Text>
-            </Container>
+            <SimpleGrid breakpoints={[{ minWidth: "sm", cols: 1 }]}>
+              <Container size="xs" className="m-0">
+                <Title order={2} className="text-white">
+                  Takeyu IT University
+                </Title>
+                <Text size="md" className="text-white">
+                  たけゆのポートフォリオのためのページです
+                </Text>
+              </Container>
+              <Box className="p-4">
+                <SimpleGrid cols={3} className="w-24">
+                  <Image src="/twitter.svg" width={25} height={25} />
+                  <Image src="/facebook.svg" width={25} height={25} />
+                  <Image src="/rss.svg" width={25} height={25} />
+                </SimpleGrid>
+              </Box>
+            </SimpleGrid>
           </Box>
           <Container m={0}>
             <Title order={2}>Blog</Title>
