@@ -6,6 +6,7 @@ import {
   Burger,
   Center,
   Container,
+  Divider,
   Footer,
   Header,
   MediaQuery,
@@ -117,10 +118,12 @@ const Home: NextPage = () => {
           </Box>
           <Container m={0}>
             <Title order={2}>Blog</Title>
+            <Divider my="lg" />
             <Container p={0}>This is a header</Container>
           </Container>
           <Container m={0}>
             <Title order={2}>Portfolio</Title>
+            <Divider my="lg" />
             <Container p={0}>IT KINGDOM</Container>
             <Center>
               <Button color="dark" radius="xl">
@@ -130,6 +133,7 @@ const Home: NextPage = () => {
           </Container>
           <Container m={0}>
             <Title order={2}>GitHub</Title>
+            <Divider my="lg" />
             <Container p={0}>This is a GitHub content</Container>
             <Center>
               <Button color="dark" radius="xl">
@@ -139,6 +143,7 @@ const Home: NextPage = () => {
           </Container>
           <Container m={0}>
             <Title order={2}>Twitter</Title>
+            <Divider my="lg" />
             <Container p={0}>This is a Twitter content</Container>
             <Center>
               <Button color="dark" radius="xl">
