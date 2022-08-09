@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   AppShell,
-  Aside,
   Box,
   Burger,
   Center,
@@ -20,11 +19,13 @@ import {
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
+import { useMediaQuery } from "src/lib/mantine";
 import { Button } from "../lib/mantine/Button";
 
 const Home: NextPage = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  const largerThanXs = useMediaQuery("sm");
 
   return (
     <div>
@@ -36,25 +37,20 @@ const Home: NextPage = () => {
                 ? theme.colors.dark[8]
                 : theme.colors.gray[0],
             padding: 0,
+            display: "flex",
           },
         }}
         navbarOffsetBreakpoint="sm"
-        asideOffsetBreakpoint="sm"
         navbar={
-          <Navbar
-            p="md"
-            hiddenBreakpoint="sm"
-            hidden={!opened}
-            width={{ sm: 200, lg: 300 }}
-          >
-            <Text>Takeyu IT University</Text>
-          </Navbar>
-        }
-        aside={
-          <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-            <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-              <Text>Application sidebar</Text>
-            </Aside>
+          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+            <Navbar
+              p="md"
+              hiddenBreakpoint="sm"
+              hidden={!opened}
+              width={{ sm: 200, lg: 300 }}
+            >
+              <Text>Takeyu IT University</Text>
+            </Navbar>
           </MediaQuery>
         }
         footer={
@@ -63,9 +59,10 @@ const Home: NextPage = () => {
           </Footer>
         }
         header={
-          <Header height={65} p="md">
+          <Header height={65} p="md" className="flex justify-center">
             <div
               style={{ display: "flex", alignItems: "center", height: "100%" }}
+              className="w-full max-w-5xl justify-between"
             >
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
                 <Burger
@@ -73,33 +70,55 @@ const Home: NextPage = () => {
                   onClick={() => setOpened((o) => !o)}
                   size="sm"
                   color={theme.colors.gray[6]}
-                  mr="xl"
                 />
               </MediaQuery>
-
-              <Text size="lg" weight={700} className="mx-auto">
+              <Text size="lg" weight={700}>
                 Takeyu IT University
               </Text>
-              <ActionIcon
-                variant="default"
-                onClick={() => {}}
-                size="lg"
-                radius="md"
-                className="ml-auto"
-              >
-                <Image src="/moon.svg" width={22} height={22} />
-              </ActionIcon>
+              <div className="flex items-center gap-4">
+                {largerThanXs ? (
+                  <>
+                    <Text size="lg" weight={700}>
+                      About
+                    </Text>
+                    <Text size="lg" weight={700}>
+                      Blog
+                    </Text>
+                    <Text size="lg" weight={700}>
+                      Portfolio
+                    </Text>
+                    <Text size="lg" weight={700}>
+                      Contact
+                    </Text>
+                  </>
+                ) : undefined}
+                <ActionIcon
+                  variant="default"
+                  onClick={() => {}}
+                  size="lg"
+                  radius="md"
+                  className="ml-auto"
+                >
+                  <Image src="/moon.svg" width={22} height={22} />
+                </ActionIcon>
+              </div>
             </div>
           </Header>
         }
       >
-        <Stack spacing={40}>
+        <Stack spacing={40} className="w-full">
           <Box
-            className="h-64 py-14"
+            className="h-64 py-14 sm:py-20"
             style={{ backgroundColor: theme.colors.pink[6] }}
           >
-            <SimpleGrid breakpoints={[{ minWidth: "sm", cols: 1 }]}>
-              <Container size="xs" className="m-0">
+            <SimpleGrid
+              breakpoints={[
+                { minWidth: "xs", cols: 1 },
+                { minWidth: "sm", cols: 2 },
+              ]}
+              className="m-auto max-w-5xl justify-between"
+            >
+              <Container size="xs" className="m-0 sm:p-0">
                 <Title order={2} className="text-white">
                   Takeyu IT University
                 </Title>
@@ -107,7 +126,7 @@ const Home: NextPage = () => {
                   たけゆのポートフォリオのためのページです
                 </Text>
               </Container>
-              <Box className="p-4">
+              <Box className={`p-4 ${largerThanXs ? "ml-auto" : ""}`}>
                 <SimpleGrid cols={3} className="w-24">
                   <Image src="/twitter.svg" width={25} height={25} />
                   <Image src="/facebook.svg" width={25} height={25} />
@@ -116,41 +135,43 @@ const Home: NextPage = () => {
               </Box>
             </SimpleGrid>
           </Box>
-          <Container m={0}>
-            <Title order={2}>Blog</Title>
-            <Divider my="lg" />
-            <Container p={0}>This is a header</Container>
-          </Container>
-          <Container m={0}>
-            <Title order={2}>Portfolio</Title>
-            <Divider my="lg" />
-            <Container p={0}>IT KINGDOM</Container>
-            <Center>
-              <Button color="dark" radius="xl">
-                View All
-              </Button>
-            </Center>
-          </Container>
-          <Container m={0}>
-            <Title order={2}>GitHub</Title>
-            <Divider my="lg" />
-            <Container p={0}>This is a GitHub content</Container>
-            <Center>
-              <Button color="dark" radius="xl">
-                View on GitHub
-              </Button>
-            </Center>
-          </Container>
-          <Container m={0}>
-            <Title order={2}>Twitter</Title>
-            <Divider my="lg" />
-            <Container p={0}>This is a Twitter content</Container>
-            <Center>
-              <Button color="dark" radius="xl">
-                View on Twitter
-              </Button>
-            </Center>
-          </Container>
+          <Stack className="mx-auto max-w-5xl">
+            <Container m={0} className="w-screen">
+              <Title order={2}>Blog</Title>
+              <Divider my="lg" />
+              <Container p={0}>This is a header</Container>
+            </Container>
+            <Container m={0}>
+              <Title order={2}>Portfolio</Title>
+              <Divider my="lg" />
+              <Container p={0}>IT KINGDOM</Container>
+              <Center>
+                <Button color="dark" radius="xl">
+                  View All
+                </Button>
+              </Center>
+            </Container>
+            <Container m={0}>
+              <Title order={2}>GitHub</Title>
+              <Divider my="lg" />
+              <Container p={0}>This is a GitHub content</Container>
+              <Center>
+                <Button color="dark" radius="xl">
+                  View on GitHub
+                </Button>
+              </Center>
+            </Container>
+            <Container m={0}>
+              <Title order={2}>Twitter</Title>
+              <Divider my="lg" />
+              <Container p={0}>This is a Twitter content</Container>
+              <Center>
+                <Button color="dark" radius="xl">
+                  View on Twitter
+                </Button>
+              </Center>
+            </Container>
+          </Stack>
         </Stack>
       </AppShell>
     </div>
