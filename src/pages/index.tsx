@@ -4,12 +4,14 @@ import {
   Box,
   Burger,
   Center,
+  CloseButton,
   Container,
   Divider,
   Footer,
   Header,
+  List,
   MediaQuery,
-  Navbar,
+  Modal,
   SimpleGrid,
   Stack,
   Text,
@@ -43,14 +45,36 @@ const Home: NextPage = () => {
         navbarOffsetBreakpoint="sm"
         navbar={
           <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Navbar
-              p="md"
-              hiddenBreakpoint="sm"
-              hidden={!opened}
-              width={{ sm: 200, lg: 300 }}
+            <Modal
+              opened={opened}
+              onClose={() => setOpened(false)}
+              styles={{
+                inner: { padding: 0 },
+                modal: {
+                  backgroundColor: theme.colors.pink[6],
+                },
+                header: { display: "none" },
+              }}
+              radius={0}
+              padding={0}
             >
-              <Text>Takeyu IT University</Text>
-            </Navbar>
+              <Box p={20}>
+                <CloseButton size={28} variant="filled" color="pink" />
+              </Box>
+              <List
+                styles={{
+                  item: { color: "white", fontWeight: 700, fontSize: 28 },
+                }}
+                px={24}
+                py={20}
+                spacing={16}
+              >
+                <List.Item>About</List.Item>
+                <List.Item>Blog</List.Item>
+                <List.Item>Portfolio</List.Item>
+                <List.Item>Contact</List.Item>
+              </List>
+            </Modal>
           </MediaQuery>
         }
         footer={
