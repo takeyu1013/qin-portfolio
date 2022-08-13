@@ -97,7 +97,9 @@ function App({ Component, pageProps }: AppProps) {
                 />
               </MediaQuery>
               <Text size="lg" weight={700}>
-                Takeyu IT University
+                <Link href="/">
+                  <a>Takeyu IT University</a>
+                </Link>
               </Text>
               <div className="flex items-center gap-4">
                 {largerThanXs ? (
