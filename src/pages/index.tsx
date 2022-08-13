@@ -20,6 +20,7 @@ import {
 } from "@mantine/core";
 import type { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { useMediaQuery } from "src/lib/mantine";
 import { Button } from "../lib/mantine/Button";
@@ -59,7 +60,12 @@ const Home: NextPage = () => {
               padding={0}
             >
               <Box p={20}>
-                <CloseButton size={28} variant="filled" color="pink" />
+                <CloseButton
+                  size={28}
+                  variant="filled"
+                  color="pink"
+                  onClick={() => setOpened(false)}
+                />
               </Box>
               <List
                 styles={{
@@ -69,7 +75,12 @@ const Home: NextPage = () => {
                 py={20}
                 spacing={16}
               >
-                <List.Item>About</List.Item>
+                <List.Item>
+                  <Link href="/about" passHref>
+                    {/* <Anchor component="a">About</Anchor> */}
+                    <a>About</a>
+                  </Link>
+                </List.Item>
                 <List.Item>Blog</List.Item>
                 <List.Item>Portfolio</List.Item>
                 <List.Item>Contact</List.Item>
