@@ -75,7 +75,11 @@ function App({ Component, pageProps }: AppProps) {
                     <a onClick={() => setOpened(false)}>Blog</a>
                   </Link>
                 </List.Item>
-                <List.Item>Portfolio</List.Item>
+                <List.Item>
+                  <Link href="/portfolio" passHref>
+                    <a onClick={() => setOpened(false)}>Portfolio</a>
+                  </Link>
+                </List.Item>
                 <List.Item>
                   <Link href="/contact" passHref>
                     <a onClick={() => setOpened(false)}>Contact</a>
