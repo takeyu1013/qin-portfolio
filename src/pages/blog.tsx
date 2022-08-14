@@ -7,9 +7,9 @@ const Blog: NextPage = () => {
     <Stack spacing={24} px={16} py={40}>
       <Title order={2}>Blog</Title>
       <Divider />
-      {[...Array(10)].map(() => {
+      {[...Array(10)].map((_, index) => {
         return (
-          <Stack spacing={8}>
+          <Stack key={index} spacing={8}>
             <Title order={3}>This is a header</Title>
             <Text lineClamp={2}>
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do
