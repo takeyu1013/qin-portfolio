@@ -60,6 +60,11 @@ const Home: NextPage = () => {
           <Title order={2}>Blog</Title>
           <Divider my="lg" />
           <Container p={0}>This is a header</Container>
+          <Center>
+            <Button color="dark" radius="xl">
+              View All
+            </Button>
+          </Center>
         </Container>
         <Container m={0}>
           <Title order={2}>Portfolio</Title>
