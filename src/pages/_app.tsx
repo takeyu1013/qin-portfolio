@@ -72,7 +72,11 @@ function App({ Component, pageProps }: AppProps) {
                 </List.Item>
                 <List.Item>Blog</List.Item>
                 <List.Item>Portfolio</List.Item>
-                <List.Item>Contact</List.Item>
+                <List.Item>
+                  <Link href="/contact" passHref>
+                    <a onClick={() => setOpened(false)}>Contact</a>
+                  </Link>
+                </List.Item>
               </List>
             </Modal>
           </MediaQuery>
