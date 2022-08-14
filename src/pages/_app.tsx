@@ -94,11 +94,9 @@ function App({ Component, pageProps }: AppProps) {
         footer={
           <Container pt={40}>
             <Footer height={65} p="md">
-              <Center>
-                <Text size="xs" weight={700} color="dimmed">
-                  © ️2022 Takeyu IT University
-                </Text>
-              </Center>
+              <Text size="xs" weight={700} color="dimmed" align="center">
+                © ️2022 Takeyu IT University
+              </Text>
             </Footer>
           </Container>
         }
