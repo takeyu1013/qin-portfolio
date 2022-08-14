@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 
 import Image from "next/image";
 import {
+  Avatar,
   Box,
   Center,
   ColorSwatch,
@@ -13,6 +14,7 @@ import {
   Stack,
   Text,
   Title,
+  TypographyStylesProvider,
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "src/lib/mantine";
@@ -136,16 +138,38 @@ const Home: NextPage = () => {
             </Button>
           </Center>
         </Stack>
-        <Container m={0}>
+        <Stack px={16}>
           <Title order={2}>Twitter</Title>
-          <Divider my="lg" />
-          <Container p={0}>This is a Twitter content</Container>
+          <Divider />
+          {[...Array(3)].map((_, index) => {
+            return (
+              <Group key={index} py={16} noWrap className="items-start">
+                <Avatar size={38} />
+                <Stack spacing={4}>
+                  <Group spacing={8}>
+                    <Title order={5}>しまぶーのIT大学</Title>
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      @shimabu_it・5月25日
+                    </Text>
+                  </Group>
+                  <TypographyStylesProvider>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          "<p>📣 新サービス「Noway Form」をリリースしました！</p><p>Noway Formは、Notionのデータベースをもとにフォームを作成できるサービスです。これまでGoogle FormsでやっていたことがNotionだけで完結します✌✨</p><p>試しに使っていただけると幸いです😊</p><p><a>https://www.noway-form.com/ja</a></p>",
+                      }}
+                    />
+                  </TypographyStylesProvider>
+                </Stack>
+              </Group>
+            );
+          })}
           <Center>
             <Button color="dark" radius="xl">
               View on Twitter
             </Button>
           </Center>
-        </Container>
+        </Stack>
       </Stack>
     </Stack>
   );
