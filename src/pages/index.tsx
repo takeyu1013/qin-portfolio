@@ -4,8 +4,11 @@ import Image from "next/image";
 import {
   Box,
   Center,
+  ColorSwatch,
   Container,
   Divider,
+  Group,
+  Progress,
   SimpleGrid,
   Stack,
   Text,
@@ -14,6 +17,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "src/lib/mantine";
 import { Button } from "../lib/mantine/Button";
+import { IconGitFork, IconStar } from "@tabler/icons";
 
 const Home: NextPage = () => {
   const theme = useMantineTheme();
@@ -73,6 +77,56 @@ const Home: NextPage = () => {
               <Stack key={index} spacing={8}>
                 <Title order={4}>lightsound/nexst-tailwind</Title>
                 <Text>Next.js starter template.</Text>
+                <Group spacing={16}>
+                  <Group spacing={4}>
+                    <IconStar size={18} color={theme.colors.dark[2]} />
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      {117}
+                    </Text>
+                  </Group>
+                  <Group spacing={4}>
+                    <IconGitFork size={18} color={theme.colors.dark[2]} />
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      {18}
+                    </Text>
+                  </Group>
+                </Group>
+                <Progress
+                  sections={[
+                    { value: 65.5, color: "#3178C6" },
+                    { value: 33.7, color: "#F1E05A" },
+                    { value: 0.8, color: "#EDEDED" },
+                  ]}
+                />
+                <Group spacing={16}>
+                  <Group spacing={6}>
+                    <ColorSwatch color="#3178C6" size={6} />
+                    <Text size="xs" weight={700}>
+                      TypeScript
+                    </Text>
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      {65.5}%
+                    </Text>
+                  </Group>
+                  <Group spacing={6}>
+                    <ColorSwatch color="#F1E05A" size={6} />
+                    <Text size="xs" weight={700}>
+                      JavaScript
+                    </Text>
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      {33.7}%
+                    </Text>
+                  </Group>
+                  <Group spacing={6}>
+                    <ColorSwatch color="#EDEDED" size={6} />
+                    <Text size="xs" weight={700}>
+                      Other
+                    </Text>
+                    <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      {0.8}%
+                    </Text>
+                  </Group>
+                </Group>
               </Stack>
             );
           })}
