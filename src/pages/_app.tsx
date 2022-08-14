@@ -9,7 +9,9 @@ import {
   AppShell,
   Box,
   Burger,
+  Center,
   CloseButton,
+  Container,
   Footer,
   Header,
   List,
@@ -90,9 +92,15 @@ function App({ Component, pageProps }: AppProps) {
           </MediaQuery>
         }
         footer={
-          <Footer height={60} p="md">
-            Application footer
-          </Footer>
+          <Container pt={40}>
+            <Footer height={65} p="md">
+              <Center>
+                <Text size="xs" weight={700} color="dimmed">
+                  © ️2022 Takeyu IT University
+                </Text>
+              </Center>
+            </Footer>
+          </Container>
         }
         header={
           <Header height={65} p="md" className="flex justify-center">
