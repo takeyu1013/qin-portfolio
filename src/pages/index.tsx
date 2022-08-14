@@ -65,16 +65,23 @@ const Home: NextPage = () => {
             </Button>
           </Center>
         </Container>
-        <Container m={0}>
+        <Stack px={16}>
           <Title order={2}>GitHub</Title>
-          <Divider my="lg" />
-          <Container p={0}>This is a GitHub content</Container>
+          <Divider />
+          {[...Array(3)].map((_, index) => {
+            return (
+              <Stack key={index} spacing={8}>
+                <Title order={4}>lightsound/nexst-tailwind</Title>
+                <Text>Next.js starter template.</Text>
+              </Stack>
+            );
+          })}
           <Center>
             <Button color="dark" radius="xl">
               View on GitHub
             </Button>
           </Center>
-        </Container>
+        </Stack>
         <Container m={0}>
           <Title order={2}>Twitter</Title>
           <Divider my="lg" />
