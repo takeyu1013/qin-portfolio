@@ -3,15 +3,12 @@ import type { AppProps } from "next/app";
 import "src/lib/tailwind.css";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ActionIcon,
   AppShell,
   Box,
   Burger,
-  Center,
   CloseButton,
-  Container,
   Footer,
   Header,
   List,
@@ -22,6 +19,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "src/lib/mantine";
+import { IconMoon } from "@tabler/icons";
 
 function App({ Component, pageProps }: AppProps) {
   const theme = useMantineTheme();
@@ -68,7 +66,6 @@ function App({ Component, pageProps }: AppProps) {
               >
                 <List.Item>
                   <Link href="/about" passHref>
-                    {/* <Anchor component="a">About</Anchor> */}
                     <a onClick={() => setOpened(false)}>About</a>
                   </Link>
                 </List.Item>
@@ -141,7 +138,7 @@ function App({ Component, pageProps }: AppProps) {
                   radius="md"
                   className="ml-auto"
                 >
-                  <Image src="/moon.svg" width={22} height={22} />
+                  <IconMoon />
                 </ActionIcon>
               </div>
             </div>
