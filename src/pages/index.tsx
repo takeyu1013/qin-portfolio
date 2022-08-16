@@ -48,9 +48,14 @@ const Home: NextPage = () => {
           </Container>
           <Box className={`p-4 ${largerThanXs ? "ml-auto" : ""}`}>
             <SimpleGrid cols={3} className="w-24">
-              <Image src="/twitter.svg" width={25} height={25} />
-              <Image src="/facebook.svg" width={25} height={25} />
-              <Image src="/rss.svg" width={25} height={25} />
+              <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
+              <Image
+                src="/facebook.svg"
+                alt="facebook"
+                width={25}
+                height={25}
+              />
+              <Image src="/rss.svg" alt="rss" width={25} height={25} />
             </SimpleGrid>
           </Box>
         </SimpleGrid>
