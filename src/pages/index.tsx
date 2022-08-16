@@ -20,13 +20,15 @@ import {
 import { useMediaQuery } from "src/lib/mantine";
 import { Button } from "../lib/mantine/Button";
 import { IconGitFork, IconStar } from "@tabler/icons";
+import { Blogs } from "src/components/blogs";
+import { Portfolios } from "src/components/portfolios";
 
 const Home: NextPage = () => {
   const theme = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
 
   return (
-    <Stack spacing={40} className="w-full">
+    <Stack spacing={0} className="w-full">
       <Box
         className="h-64 py-14 sm:py-20"
         style={{ backgroundColor: theme.colors.pink[6] }}
@@ -60,27 +62,23 @@ const Home: NextPage = () => {
           </Box>
         </SimpleGrid>
       </Box>
-      <Stack className="mx-auto max-w-5xl">
-        <Container m={0} className="w-screen">
-          <Title order={2}>Blog</Title>
-          <Divider my="lg" />
-          <Container p={0}>This is a header</Container>
-          <Center>
+      <Stack py={40} spacing={40} className="mx-auto max-w-5xl">
+        <Stack spacing={24}>
+          <Blogs size={3} />
+          <Center pb={21}>
             <Button color="dark" radius="xl">
               View All
             </Button>
           </Center>
-        </Container>
-        <Container m={0}>
-          <Title order={2}>Portfolio</Title>
-          <Divider my="lg" />
-          <Container p={0}>IT KINGDOM</Container>
-          <Center>
+        </Stack>
+        <Stack spacing={24}>
+          <Portfolios size={3} />
+          <Center pb={21}>
             <Button color="dark" radius="xl">
               View All
             </Button>
           </Center>
-        </Container>
+        </Stack>
         <Stack px={16}>
           <Title order={2}>GitHub</Title>
           <Divider />

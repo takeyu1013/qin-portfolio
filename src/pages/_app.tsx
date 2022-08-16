@@ -92,13 +92,11 @@ function App({ Component, pageProps }: AppProps) {
           </MediaQuery>
         }
         footer={
-          <Container pt={40}>
-            <Footer height={65} p="md">
-              <Text size="xs" weight={700} color="dimmed" align="center">
-                © ️2022 Takeyu IT University
-              </Text>
-            </Footer>
-          </Container>
+          <Footer height={65} p="md">
+            <Text size="xs" weight={700} color="dimmed" align="center">
+              © ️2022 Takeyu IT University
+            </Text>
+          </Footer>
         }
         header={
           <Header height={65} p="md" className="flex justify-center">
