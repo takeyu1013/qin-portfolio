@@ -10,6 +10,7 @@ import {
   Burger,
   CloseButton,
   Footer,
+  Group,
   Header,
   List,
   MantineProvider,
@@ -96,52 +97,50 @@ function App({ Component, pageProps }: AppProps) {
           </Footer>
         }
         header={
-          <Header height={65} p="md" className="flex justify-center">
-            <div
-              style={{ display: "flex", alignItems: "center", height: "100%" }}
-              className="w-full max-w-5xl justify-between"
-            >
-              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Burger
-                  opened={opened}
-                  onClick={() => setOpened((o) => !o)}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                />
-              </MediaQuery>
-              <Text size="lg" weight={700}>
-                <Link href="/">
-                  <a>Takeyu IT University</a>
-                </Link>
-              </Text>
-              <div className="flex items-center gap-4">
-                {largerThanXs ? (
-                  <>
-                    <Text size="lg" weight={700}>
-                      About
-                    </Text>
-                    <Text size="lg" weight={700}>
-                      Blog
-                    </Text>
-                    <Text size="lg" weight={700}>
-                      Portfolio
-                    </Text>
-                    <Text size="lg" weight={700}>
-                      Contact
-                    </Text>
-                  </>
-                ) : undefined}
-                <ActionIcon
-                  variant="default"
-                  onClick={() => {}}
-                  size="lg"
-                  radius="md"
-                  className="ml-auto"
-                >
-                  <IconMoon />
-                </ActionIcon>
-              </div>
-            </div>
+          <Header
+            height={65}
+            p="md"
+            className="flex items-center justify-between"
+          >
+            {largerThanXs || (
+              <Burger
+                opened={opened}
+                onClick={() => setOpened((opened) => !opened)}
+                size="sm"
+                color={theme.colors.gray[6]}
+              />
+            )}
+            <Text size="lg" weight={700}>
+              <Link href="/">
+                <a>Takeyu IT University</a>
+              </Link>
+            </Text>
+            <Group>
+              {largerThanXs && (
+                <>
+                  <Text size="lg" weight={700}>
+                    About
+                  </Text>
+                  <Text size="lg" weight={700}>
+                    Blog
+                  </Text>
+                  <Text size="lg" weight={700}>
+                    Portfolio
+                  </Text>
+                  <Text size="lg" weight={700}>
+                    Contact
+                  </Text>
+                </>
+              )}
+              <ActionIcon
+                variant="default"
+                onClick={() => {}}
+                size="lg"
+                radius="md"
+              >
+                <IconMoon />
+              </ActionIcon>
+            </Group>
           </Header>
         }
         padding={0}
