@@ -5,17 +5,15 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ActionIcon,
+  Anchor,
   AppShell,
-  Box,
   Burger,
-  CloseButton,
+  Drawer,
   Footer,
   Group,
   Header,
   List,
   MantineProvider,
-  MediaQuery,
-  Modal,
   Text,
   useMantineTheme,
 } from "@mantine/core";
@@ -23,9 +21,10 @@ import { useMediaQuery } from "src/lib/mantine";
 import { IconMoon } from "@tabler/icons";
 
 function App({ Component, pageProps }: AppProps) {
-  const theme = useMantineTheme();
+  const { colors } = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const largerThanXs = useMediaQuery("sm");
+  const TITLES = ["about", "blog", "portfolio", "contact"] as const;
 
   return (
     <MantineProvider
@@ -35,64 +34,41 @@ function App({ Component, pageProps }: AppProps) {
     >
       <AppShell
         navbar={
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Modal
-              opened={opened}
-              onClose={() => setOpened(false)}
-              styles={{
-                inner: { padding: 0 },
-                modal: {
-                  backgroundColor: theme.colors.pink[6],
-                },
-                header: { display: "none" },
-              }}
-              radius={0}
-              padding={0}
-            >
-              <Box p={20}>
-                <CloseButton
-                  size={28}
-                  variant="filled"
-                  color="pink"
-                  onClick={() => setOpened(false)}
-                />
-              </Box>
-              <List
-                styles={{
-                  item: { color: "white", fontWeight: 700, fontSize: 28 },
-                }}
-                px={24}
-                py={20}
-                spacing={16}
-              >
-                <List.Item>
-                  <Link href="/about" passHref>
-                    <a onClick={() => setOpened(false)}>About</a>
-                  </Link>
-                </List.Item>
-                <List.Item>
-                  <Link href="/blog" passHref>
-                    <a onClick={() => setOpened(false)}>Blog</a>
-                  </Link>
-                </List.Item>
-                <List.Item>
-                  <Link href="/portfolio" passHref>
-                    <a onClick={() => setOpened(false)}>Portfolio</a>
-                  </Link>
-                </List.Item>
-                <List.Item>
-                  <Link href="/contact" passHref>
-                    <a onClick={() => setOpened(false)}>Contact</a>
-                  </Link>
-                </List.Item>
-              </List>
-            </Modal>
-          </MediaQuery>
+          <Drawer
+            opened={opened}
+            onClose={() => setOpened(false)}
+            size="100%"
+            styles={{
+              drawer: { backgroundColor: colors.pink[6] },
+              header: { height: 65, margin: 0, paddingLeft: 16 },
+              title: { display: "none" },
+              closeButton: { color: "white" },
+            }}
+          >
+            <List px={24} py={20} spacing={16}>
+              {TITLES.map((title, index) => {
+                return (
+                  <List.Item key={index}>
+                    <Link href={`/${title}`} passHref>
+                      <Anchor
+                        component="a"
+                        variant="text"
+                        style={{ fontSize: 28, color: "white" }}
+                        onClick={() => setOpened(false)}
+                      >
+                        {title[0].toUpperCase() + title.slice(1)}
+                      </Anchor>
+                    </Link>
+                  </List.Item>
+                );
+              })}
+            </List>
+          </Drawer>
         }
         footer={
           <Footer height={65} p="md">
-            <Text size="xs" weight={700} color="dimmed" align="center">
-              © ️2022 Takeyu IT University
+            <Text size="xs" weight={700} color={colors.gray[6]} align="center">
+              © ️2022 Shimabu IT University
             </Text>
           </Footer>
         }
@@ -107,7 +83,7 @@ function App({ Component, pageProps }: AppProps) {
                 opened={opened}
                 onClick={() => setOpened((opened) => !opened)}
                 size="sm"
-                color={theme.colors.gray[6]}
+                color={colors.gray[6]}
               />
             )}
             <Text size="lg" weight={700}>
@@ -118,18 +94,21 @@ function App({ Component, pageProps }: AppProps) {
             <Group>
               {largerThanXs && (
                 <>
-                  <Text size="lg" weight={700}>
-                    About
-                  </Text>
-                  <Text size="lg" weight={700}>
-                    Blog
-                  </Text>
-                  <Text size="lg" weight={700}>
-                    Portfolio
-                  </Text>
-                  <Text size="lg" weight={700}>
-                    Contact
-                  </Text>
+                  {TITLES.map((title, index) => {
+                    return (
+                      <Link key={index} href={`/${title}`} passHref>
+                        <Anchor
+                          component="a"
+                          variant="text"
+                          weight={700}
+                          size="lg"
+                          onClick={() => setOpened(false)}
+                        >
+                          {title[0].toUpperCase() + title.slice(1)}
+                        </Anchor>
+                      </Link>
+                    );
+                  })}
                 </>
               )}
               <ActionIcon
