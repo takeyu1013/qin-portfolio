@@ -1,7 +1,16 @@
-import { Divider, Image, Stack, Text, Title } from "@mantine/core";
+import {
+  Divider,
+  Image,
+  Stack,
+  Text,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 import { FC } from "react";
 
 export const Portfolios: FC<{ size: number }> = ({ size }) => {
+  const { colors } = useMantineTheme();
+
   return (
     <Stack spacing={24} px={16} py={0}>
       <Title order={2}>Portfolio</Title>
@@ -19,7 +28,7 @@ export const Portfolios: FC<{ size: number }> = ({ size }) => {
             <Text>
               当サロンのLPページ。React、Next.js、TypeScriptなどのモダンな技術を用いて作られています。初心者にちょうど良い難易度の制作物です。
             </Text>
-            <Text size="xs" weight={700} color="dimmed">
+            <Text size="xs" weight={700} color={colors.dark[2]}>
               2021.10 - 2021.12
             </Text>
           </Stack>
