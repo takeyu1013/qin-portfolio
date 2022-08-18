@@ -53,6 +53,7 @@ function App({ Component, pageProps }: AppProps) {
                       <Anchor
                         component="a"
                         variant="text"
+                        weight={700}
                         style={{ fontSize: 28, color: "white" }}
                         onClick={() => setOpened(false)}
                       >
