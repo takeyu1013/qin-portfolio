@@ -21,18 +21,25 @@ import { IconGitFork, IconStar } from "@tabler/icons";
 import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
+import { useMediaQuery } from "src/lib/mantine";
 
 const Home: NextPage = () => {
   const theme = useMantineTheme();
+  const largerThanXs = useMediaQuery("sm");
 
   return (
     <Stack pb={40} spacing={40}>
       <SimpleGrid
         px={16}
         style={{ backgroundColor: theme.colors.pink[6] }}
-        className="h-64 items-center"
+        className={`h-64 items-center ${largerThanXs && "flex justify-center"}`}
       >
-        <SimpleGrid breakpoints={[{ minWidth: "sm", cols: 2 }]} spacing={30}>
+        <SimpleGrid
+          className={
+            largerThanXs ? "flex max-w-5xl flex-auto justify-between" : ""
+          }
+          px={largerThanXs ? 16 : 0}
+        >
           <Box>
             <Title order={2} className="text-white">
               Takeyu IT University
@@ -41,7 +48,7 @@ const Home: NextPage = () => {
               たけゆのポートフォリオのためのページです
             </Text>
           </Box>
-          <Group className="sm:justify-end">
+          <Group className="">
             <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
             <Image src="/facebook.svg" alt="facebook" width={25} height={25} />
             <Image src="/rss.svg" alt="rss" width={25} height={25} />
