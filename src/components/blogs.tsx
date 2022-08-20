@@ -1,7 +1,18 @@
-import { Divider, Stack, Text, Title, useMantineTheme } from "@mantine/core";
+import {
+  Center,
+  Divider,
+  Loader,
+  Stack,
+  Text,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 import { FC } from "react";
 
-export const Blogs: FC<{ size: number }> = ({ size }) => {
+export const Blogs: FC<{ size: number; isLoading?: boolean }> = ({
+  size,
+  isLoading,
+}) => {
   const { colors } = useMantineTheme();
 
   return (
@@ -22,6 +33,11 @@ export const Blogs: FC<{ size: number }> = ({ size }) => {
           </Stack>
         );
       })}
+      {isLoading && (
+        <Center>
+          <Loader color={colors.pink[6]} />
+        </Center>
+      )}
     </Stack>
   );
 };
