@@ -13,7 +13,7 @@ export const Portfolios: FC<{ size: number }> = ({ size }) => {
   const { colors } = useMantineTheme();
 
   return (
-    <Stack spacing={24} px={16} py={0}>
+    <Stack spacing={24} px={16} py={0} className="max-w-5xl flex-auto">
       <Title order={2}>Portfolio</Title>
       <Divider />
       <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
