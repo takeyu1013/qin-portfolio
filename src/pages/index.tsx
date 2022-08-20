@@ -67,7 +67,7 @@ const Home: NextPage = () => {
       </Group>
       <Group position="center">
         <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Portfolios size={3} />
+          <Portfolios size={largerThanXs ? 6 : 3} />
           <Center pb={21}>
             <Button color="dark" radius="xl">
               View All
@@ -80,10 +80,10 @@ const Home: NextPage = () => {
           breakpoints={[{ minWidth: "sm", cols: 2 }]}
           className="max-w-5xl flex-auto"
         >
-          <Stack px={16}>
+          <Stack px={16} spacing={24}>
             <Title order={2}>GitHub</Title>
             <Divider />
-            {[...Array(3)].map((_, index) => {
+            {[...Array(largerThanXs ? 5 : 3)].map((_, index) => {
               return (
                 <Stack key={index} spacing={8}>
                   <Title order={4}>lightsound/nexst-tailwind</Title>
