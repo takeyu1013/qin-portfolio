@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 
-import { Box, Container, Divider, Stack, Text, Title } from "@mantine/core";
+import { Box, Divider, Stack, Text, Title } from "@mantine/core";
 
 const About: NextPage = () => {
   return (
