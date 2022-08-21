@@ -20,12 +20,12 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "src/lib/mantine";
 import { IconMoon, IconSun } from "@tabler/icons";
+import { pagesPath } from "src/lib/$path";
 
 function App({ Component, pageProps }: AppProps) {
   const { colors } = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const largerThanXs = useMediaQuery("sm");
-  const TITLES = ["about", "blog", "portfolio", "contact"] as const;
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
@@ -81,23 +81,25 @@ function App({ Component, pageProps }: AppProps) {
                     }}
                   >
                     <List px={24} py={20} spacing={16}>
-                      {TITLES.map((title, index) => {
-                        return (
-                          <List.Item key={index}>
-                            <Link href={`/${title}`} passHref>
-                              <Anchor
-                                component="a"
-                                variant="text"
-                                weight={700}
-                                style={{ fontSize: 28, color: "white" }}
-                                onClick={() => setOpened(false)}
-                              >
-                                {title[0].toUpperCase() + title.slice(1)}
-                              </Anchor>
-                            </Link>
-                          </List.Item>
-                        );
-                      })}
+                      {Object.keys(pagesPath)
+                        .filter((title) => title !== "$url")
+                        .map((title, index) => {
+                          return (
+                            <List.Item key={index}>
+                              <Link href={`/${title}`} passHref>
+                                <Anchor
+                                  component="a"
+                                  variant="text"
+                                  weight={700}
+                                  style={{ fontSize: 28, color: "white" }}
+                                  onClick={() => setOpened(false)}
+                                >
+                                  {title[0].toUpperCase() + title.slice(1)}
+                                </Anchor>
+                              </Link>
+                            </List.Item>
+                          );
+                        })}
                     </List>
                   </Drawer>
                 </>
@@ -110,21 +112,23 @@ function App({ Component, pageProps }: AppProps) {
               <Group>
                 {largerThanXs && (
                   <>
-                    {TITLES.map((title, index) => {
-                      return (
-                        <Link key={index} href={`/${title}`} passHref>
-                          <Anchor
-                            component="a"
-                            variant="text"
-                            weight={700}
-                            size="lg"
-                            onClick={() => setOpened(false)}
-                          >
-                            {title[0].toUpperCase() + title.slice(1)}
-                          </Anchor>
-                        </Link>
-                      );
-                    })}
+                    {Object.keys(pagesPath)
+                      .filter((title) => title !== "$url")
+                      .map((title, index) => {
+                        return (
+                          <Link key={index} href={`/${title}`} passHref>
+                            <Anchor
+                              component="a"
+                              variant="text"
+                              weight={700}
+                              size="lg"
+                              onClick={() => setOpened(false)}
+                            >
+                              {title[0].toUpperCase() + title.slice(1)}
+                            </Anchor>
+                          </Link>
+                        );
+                      })}
                   </>
                 )}
                 <ActionIcon
