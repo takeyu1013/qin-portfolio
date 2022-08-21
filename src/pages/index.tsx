@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 
+import Link from "next/link";
 import Image from "next/image";
 import {
   Avatar,
@@ -62,13 +63,16 @@ const Home: NextPage = () => {
         <Stack spacing={24} className="max-w-5xl flex-auto">
           <Blogs size={3} />
           <Center pb={21}>
-            <Button
-              color="dark"
-              variant={dark ? "white" : "filled"}
-              radius="xl"
-            >
-              View All
-            </Button>
+            <Link href="/blog">
+              <Button
+                color="dark"
+                variant={dark ? "white" : "filled"}
+                radius="xl"
+                component="a"
+              >
+                View All
+              </Button>
+            </Link>
           </Center>
         </Stack>
       </Group>
@@ -76,13 +80,16 @@ const Home: NextPage = () => {
         <Stack spacing={24} className="max-w-5xl flex-auto">
           <Portfolios size={largerThanXs ? 6 : 3} />
           <Center pb={21}>
-            <Button
-              color="dark"
-              variant={dark ? "white" : "filled"}
-              radius="xl"
-            >
-              View All
-            </Button>
+            <Link href="/portfolio">
+              <Button
+                color="dark"
+                variant={dark ? "white" : "filled"}
+                radius="xl"
+                component="a"
+              >
+                View All
+              </Button>
+            </Link>
           </Center>
         </Stack>
       </Group>
