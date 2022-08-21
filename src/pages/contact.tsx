@@ -8,10 +8,13 @@ import {
   Textarea,
   TextInput,
   Title,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { Button } from "src/lib/mantine";
 
 const Contact: NextPage = () => {
+  const { colorScheme } = useMantineColorScheme();
+
   return (
     <Box className="flex justify-center">
       <Stack px={16} py={40} className="max-w-5xl flex-auto">
@@ -24,7 +27,11 @@ const Contact: NextPage = () => {
           placeholder="I want to order your goods"
         />
         <Center>
-          <Button color="dark" radius="xl">
+          <Button
+            color="dark"
+            variant={colorScheme === "dark" ? "white" : "filled"}
+            radius="xl"
+          >
             Send message
           </Button>
         </Center>

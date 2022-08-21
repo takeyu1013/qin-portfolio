@@ -14,6 +14,7 @@ import {
   Text,
   Title,
   TypographyStylesProvider,
+  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
 import { IconGitFork, IconStar } from "@tabler/icons";
@@ -24,14 +25,16 @@ import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
 
 const Home: NextPage = () => {
-  const theme = useMantineTheme();
+  const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
 
   return (
     <Stack pb={40} spacing={40}>
       <SimpleGrid
         px={16}
-        style={{ backgroundColor: theme.colors.pink[6] }}
+        style={{ backgroundColor: colors.pink[6] }}
         className={`h-64 items-center ${largerThanXs && "flex justify-center"}`}
       >
         <SimpleGrid
@@ -59,7 +62,11 @@ const Home: NextPage = () => {
         <Stack spacing={24} className="max-w-5xl flex-auto">
           <Blogs size={3} />
           <Center pb={21}>
-            <Button color="dark" radius="xl">
+            <Button
+              color="dark"
+              variant={dark ? "white" : "filled"}
+              radius="xl"
+            >
               View All
             </Button>
           </Center>
@@ -69,7 +76,11 @@ const Home: NextPage = () => {
         <Stack spacing={24} className="max-w-5xl flex-auto">
           <Portfolios size={largerThanXs ? 6 : 3} />
           <Center pb={21}>
-            <Button color="dark" radius="xl">
+            <Button
+              color="dark"
+              variant={dark ? "white" : "filled"}
+              radius="xl"
+            >
               View All
             </Button>
           </Center>
@@ -90,14 +101,14 @@ const Home: NextPage = () => {
                   <Text>Next.js starter template.</Text>
                   <Group spacing={16}>
                     <Group spacing={4}>
-                      <IconStar size={18} color={theme.colors.dark[2]} />
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <IconStar size={18} color={colors.dark[2]} />
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         {117}
                       </Text>
                     </Group>
                     <Group spacing={4}>
-                      <IconGitFork size={18} color={theme.colors.dark[2]} />
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <IconGitFork size={18} color={colors.dark[2]} />
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         {18}
                       </Text>
                     </Group>
@@ -115,7 +126,7 @@ const Home: NextPage = () => {
                       <Text size="xs" weight={700}>
                         TypeScript
                       </Text>
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         {65.5}%
                       </Text>
                     </Group>
@@ -124,7 +135,7 @@ const Home: NextPage = () => {
                       <Text size="xs" weight={700}>
                         JavaScript
                       </Text>
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         {33.7}%
                       </Text>
                     </Group>
@@ -133,7 +144,7 @@ const Home: NextPage = () => {
                       <Text size="xs" weight={700}>
                         Other
                       </Text>
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         {0.8}%
                       </Text>
                     </Group>
@@ -142,7 +153,11 @@ const Home: NextPage = () => {
               );
             })}
             <Center>
-              <Button color="dark" radius="xl">
+              <Button
+                color="dark"
+                variant={dark ? "white" : "filled"}
+                radius="xl"
+              >
                 View on GitHub
               </Button>
             </Center>
@@ -157,7 +172,7 @@ const Home: NextPage = () => {
                   <Stack spacing={4}>
                     <Group spacing={8}>
                       <Title order={5}>しまぶーのIT大学</Title>
-                      <Text size="xs" color={theme.colors.dark[2]} weight={700}>
+                      <Text size="xs" color={colors.dark[2]} weight={700}>
                         @shimabu_it・5月25日
                       </Text>
                     </Group>
@@ -174,7 +189,11 @@ const Home: NextPage = () => {
               );
             })}
             <Center>
-              <Button color="dark" radius="xl">
+              <Button
+                color="dark"
+                variant={dark ? "white" : "filled"}
+                radius="xl"
+              >
                 View on Twitter
               </Button>
             </Center>
