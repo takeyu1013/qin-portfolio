@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { ColorScheme, ColorSchemeProvider } from "@mantine/core";
+import { ColorScheme, ColorSchemeProvider, Title } from "@mantine/core";
 
 import "src/lib/tailwind.css";
 import { useState } from "react";
@@ -30,6 +30,12 @@ function App({ Component, pageProps }: AppProps) {
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   const dark = colorScheme === "dark";
+  const paths = [
+    ["about", pagesPath.about.$url()],
+    ["blog", pagesPath.blog.$url()],
+    ["portfolio", pagesPath.portfolio.$url()],
+    ["contact", pagesPath.contact.$url()],
+  ] as const;
 
   return (
     <ColorSchemeProvider
@@ -81,54 +87,50 @@ function App({ Component, pageProps }: AppProps) {
                     }}
                   >
                     <List px={24} py={20} spacing={16}>
-                      {Object.keys(pagesPath)
-                        .filter((title) => title !== "$url")
-                        .map((title, index) => {
-                          return (
-                            <List.Item key={index}>
-                              <Link href={`/${title}`} passHref>
-                                <Anchor
-                                  component="a"
-                                  variant="text"
-                                  weight={700}
-                                  style={{ fontSize: 28, color: "white" }}
-                                  onClick={() => setOpened(false)}
-                                >
-                                  {title[0].toUpperCase() + title.slice(1)}
-                                </Anchor>
-                              </Link>
-                            </List.Item>
-                          );
-                        })}
+                      {paths.map(([title, url], index) => {
+                        return (
+                          <List.Item key={index}>
+                            <Link href={url} passHref>
+                              <Anchor
+                                component="a"
+                                variant="text"
+                                weight={700}
+                                style={{ fontSize: 28, color: "white" }}
+                                onClick={() => setOpened(false)}
+                              >
+                                {title[0].toUpperCase() + title.slice(1)}
+                              </Anchor>
+                            </Link>
+                          </List.Item>
+                        );
+                      })}
                     </List>
                   </Drawer>
                 </>
               )}
-              <Text size="lg" weight={700}>
+              <Title order={4}>
                 <Link href="/">
                   <a>Takeyu IT University</a>
                 </Link>
-              </Text>
+              </Title>
               <Group>
                 {largerThanXs && (
                   <>
-                    {Object.keys(pagesPath)
-                      .filter((title) => title !== "$url")
-                      .map((title, index) => {
-                        return (
-                          <Link key={index} href={`/${title}`} passHref>
-                            <Anchor
-                              component="a"
-                              variant="text"
-                              weight={700}
-                              size="lg"
-                              onClick={() => setOpened(false)}
-                            >
-                              {title[0].toUpperCase() + title.slice(1)}
-                            </Anchor>
-                          </Link>
-                        );
-                      })}
+                    {paths.map(([title, url], index) => {
+                      return (
+                        <Link key={index} href={url} passHref>
+                          <Anchor
+                            component="a"
+                            variant="text"
+                            weight={700}
+                            size="lg"
+                            onClick={() => setOpened(false)}
+                          >
+                            {title[0].toUpperCase() + title.slice(1)}
+                          </Anchor>
+                        </Link>
+                      );
+                    })}
                   </>
                 )}
                 <ActionIcon
