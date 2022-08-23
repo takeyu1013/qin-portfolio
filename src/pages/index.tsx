@@ -32,7 +32,7 @@ const Home: NextPage = () => {
   const dark = colorScheme === "dark";
 
   return (
-    <Stack pb={40} spacing={40}>
+    <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
       <SimpleGrid
         px={16}
         style={{ backgroundColor: colors.pink[6] }}
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
             <Divider />
             {[...Array(largerThanXs ? 5 : 3)].map((_, index) => {
               return (
-                <Stack key={index} spacing={8}>
+                <Stack key={index} py={8} spacing={8}>
                   <Title order={4}>lightsound/nexst-tailwind</Title>
                   <Text>Next.js starter template.</Text>
                   <Group spacing={16}>
@@ -169,7 +169,7 @@ const Home: NextPage = () => {
               </Button>
             </Center>
           </Stack>
-          <Stack px={16}>
+          <Stack px={16} spacing={24}>
             <Title order={2}>Twitter</Title>
             <Divider />
             {[...Array(3)].map((_, index) => {
