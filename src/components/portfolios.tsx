@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Divider,
   Image,
   SimpleGrid,
@@ -7,6 +8,7 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
+import Link from "next/link";
 import { FC } from "react";
 import { Props } from "src/pages";
 
@@ -23,24 +25,32 @@ export const Portfolios: FC<{
       <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
         {contents
           .slice(0, size)
-          .map(({ id, image, title, content, startAt, endAt }) => {
+          .map(({ id, image, title, link, content, startAt, endAt }) => {
             const { url } = image;
             const start = new Date(startAt);
             const end = new Date(endAt);
 
             return (
-              <Stack key={id} spacing={8}>
-                <Image src={url} width={358} alt="With default placeholder" />
-                <Title order={3}>{title}</Title>
-                <Text>{content}</Text>
-                <Text
-                  size="xs"
-                  weight={700}
-                  color={colors.dark[2]}
-                >{`${start.getFullYear()}.${
-                  start.getMonth() + 1
-                } - ${end.getFullYear()}.${end.getMonth() + 1}`}</Text>
-              </Stack>
+              <Link key={id} href={link} passHref>
+                <Anchor component="a" variant="text">
+                  <Stack spacing={8}>
+                    <Image
+                      src={url}
+                      width={358}
+                      alt="With default placeholder"
+                    />
+                    <Title order={3}>{title}</Title>
+                    <Text>{content}</Text>
+                    <Text
+                      size="xs"
+                      weight={700}
+                      color={colors.dark[2]}
+                    >{`${start.getFullYear()}.${
+                      start.getMonth() + 1
+                    } - ${end.getFullYear()}.${end.getMonth() + 1}`}</Text>
+                  </Stack>
+                </Anchor>
+              </Link>
             );
           })}
       </SimpleGrid>
