@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -24,8 +24,17 @@ import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
+import { MicroCMSListResponse } from "microcms-js-sdk";
+import { client } from "src/lib/client";
 
-const Home: NextPage = () => {
+export type Blog = {
+  title: string;
+  body: string;
+};
+
+export type Props = MicroCMSListResponse<Blog>;
+
+const Home: NextPage<Props> = ({ contents }) => {
   const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
@@ -61,7 +70,7 @@ const Home: NextPage = () => {
       </SimpleGrid>
       <Group position="center">
         <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Blogs size={3} />
+          <Blogs size={3} contents={contents} />
           <Center pb={21}>
             <Link href="/blog">
               <Button
@@ -209,6 +218,13 @@ const Home: NextPage = () => {
       </Group>
     </Stack>
   );
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const data = await client.getList<Blog>({ endpoint: "blog" });
+  return {
+    props: data,
+  };
 };
 
 export default Home;
