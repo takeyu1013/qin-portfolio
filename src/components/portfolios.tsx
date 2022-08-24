@@ -8,8 +8,12 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { FC } from "react";
+import { Props } from "src/pages";
 
-export const Portfolios: FC<{ size: number }> = ({ size }) => {
+export const Portfolios: FC<{
+  size: number;
+  contents: Props["portfolios"]["contents"];
+}> = ({ size, contents }) => {
   const { colors } = useMantineTheme();
 
   return (
@@ -17,25 +21,28 @@ export const Portfolios: FC<{ size: number }> = ({ size }) => {
       <Title order={2}>Portfolio</Title>
       <Divider />
       <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
-        {[...Array(size)].map((_, index) => {
-          return (
-            <Stack key={index} spacing={8}>
-              <Image
-                width={358}
-                height={184}
-                alt="With default placeholder"
-                withPlaceholder
-              />
-              <Title order={3}>IT KINGDOM</Title>
-              <Text>
-                当サロンのLPページ。React、Next.js、TypeScriptなどのモダンな技術を用いて作られています。初心者にちょうど良い難易度の制作物です。
-              </Text>
-              <Text size="xs" weight={700} color={colors.dark[2]}>
-                2021.10 - 2021.12
-              </Text>
-            </Stack>
-          );
-        })}
+        {contents
+          .slice(0, size)
+          .map(({ id, image, title, content, startAt, endAt }) => {
+            const { url } = image;
+            const start = new Date(startAt);
+            const end = new Date(endAt);
+
+            return (
+              <Stack key={id} spacing={8}>
+                <Image src={url} width={358} alt="With default placeholder" />
+                <Title order={3}>{title}</Title>
+                <Text>{content}</Text>
+                <Text
+                  size="xs"
+                  weight={700}
+                  color={colors.dark[2]}
+                >{`${start.getFullYear()}.${
+                  start.getMonth() + 1
+                } - ${end.getFullYear()}.${end.getMonth() + 1}`}</Text>
+              </Stack>
+            );
+          })}
       </SimpleGrid>
     </Stack>
   );

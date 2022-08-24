@@ -32,9 +32,25 @@ export type Blog = {
   body: string;
 };
 
-export type Props = MicroCMSListResponse<Blog>;
+export type Portfolio = {
+  title: string;
+  content: string;
+  link: string;
+  image: {
+    url: string;
+    height: number;
+    width: number;
+  };
+  startAt: string;
+  endAt: string;
+};
 
-const Home: NextPage<Props> = ({ contents }) => {
+export type Props = {
+  blogs: MicroCMSListResponse<Blog>;
+  portfolios: MicroCMSListResponse<Portfolio>;
+};
+
+const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
@@ -70,7 +86,7 @@ const Home: NextPage<Props> = ({ contents }) => {
       </SimpleGrid>
       <Group position="center">
         <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Blogs size={3} contents={contents} />
+          <Blogs size={3} contents={blogs.contents} />
           <Center pb={21}>
             <Link href="/blog">
               <Button
@@ -87,7 +103,10 @@ const Home: NextPage<Props> = ({ contents }) => {
       </Group>
       <Group position="center">
         <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Portfolios size={largerThanXs ? 6 : 3} />
+          <Portfolios
+            size={largerThanXs ? 6 : 3}
+            contents={portfolios.contents}
+          />
           <Center pb={21}>
             <Link href="/portfolio">
               <Button
@@ -221,9 +240,12 @@ const Home: NextPage<Props> = ({ contents }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const data = await client.getList<Blog>({ endpoint: "blog" });
+  const blogs = await client.getList<Blog>({ endpoint: "blog" });
+  const portfolios = await client.getList<Portfolio>({ endpoint: "portfolio" });
+  console.log(portfolios);
+
   return {
-    props: data,
+    props: { blogs, portfolios },
   };
 };
 

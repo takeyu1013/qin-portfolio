@@ -14,7 +14,7 @@ import { Props } from "src/pages";
 export const Blogs: FC<{
   size: number;
   isLoading?: boolean;
-  contents: Props["contents"];
+  contents: Props["blogs"]["contents"];
 }> = ({ size, isLoading, contents }) => {
   const { colors } = useMantineTheme();
 

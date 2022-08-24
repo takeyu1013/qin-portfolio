@@ -1,9 +1,12 @@
 import { Box } from "@mantine/core";
+import { MicroCMSListResponse } from "microcms-js-sdk";
 import type { GetStaticProps, NextPage } from "next";
 
 import { Blogs } from "src/components/blogs";
 import { client } from "src/lib/client";
-import { Blog, Props } from "src/pages";
+import { Blog } from "src/pages";
+
+type Props = MicroCMSListResponse<Blog>;
 
 const Blog: NextPage<Props> = ({ contents }) => {
   return (
