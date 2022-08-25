@@ -1,5 +1,6 @@
 import {
   Anchor,
+  Box,
   Divider,
   Image,
   SimpleGrid,
@@ -8,6 +9,7 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
+import dayjs from "dayjs";
 import Link from "next/link";
 import { FC } from "react";
 import { Props } from "src/pages";
@@ -27,8 +29,7 @@ export const Portfolios: FC<{
           .slice(0, size)
           .map(({ id, image, title, link, content, startAt, endAt }) => {
             const { url } = image;
-            const start = new Date(startAt);
-            const end = new Date(endAt);
+            console.log(endAt);
 
             return (
               <Link key={id} href={link} passHref>
@@ -41,13 +42,37 @@ export const Portfolios: FC<{
                     />
                     <Title order={3}>{title}</Title>
                     <Text>{content}</Text>
-                    <Text
-                      size="xs"
-                      weight={700}
-                      color={colors.dark[2]}
-                    >{`${start.getFullYear()}.${
-                      start.getMonth() + 1
-                    } - ${end.getFullYear()}.${end.getMonth() + 1}`}</Text>
+                    <Box>
+                      <Text
+                        component="time"
+                        dateTime={startAt}
+                        size="xs"
+                        weight={700}
+                        color={colors.dark[2]}
+                        className="inline"
+                      >
+                        {dayjs(startAt).format("YYYY.MM")}
+                      </Text>
+                      <Text
+                        size="xs"
+                        weight={700}
+                        color={colors.dark[2]}
+                        className="inline"
+                      >
+                        {" "}
+                        -{" "}
+                      </Text>
+                      <Text
+                        component="time"
+                        dateTime={endAt}
+                        size="xs"
+                        weight={700}
+                        color={colors.dark[2]}
+                        className="inline"
+                      >
+                        {endAt && dayjs(endAt).format("YYYY.MM")}
+                      </Text>
+                    </Box>
                   </Stack>
                 </Anchor>
               </Link>

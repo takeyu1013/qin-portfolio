@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Center,
   Divider,
   Loader,
@@ -8,6 +9,8 @@ import {
   TypographyStylesProvider,
   useMantineTheme,
 } from "@mantine/core";
+import dayjs from "dayjs";
+import Link from "next/link";
 import { FC } from "react";
 import { Props } from "src/pages";
 
@@ -23,23 +26,28 @@ export const Blogs: FC<{
       <Title order={2}>Blog</Title>
       <Divider />
       {contents.slice(0, size).map(({ id, title, body, publishedAt }) => {
-        const date = new Date(publishedAt || "");
         return (
-          <Stack key={id} spacing={8}>
-            <Title order={3}>{title}</Title>
-            <Text lineClamp={2}>
-              <TypographyStylesProvider>
-                <div dangerouslySetInnerHTML={{ __html: body }} />
-              </TypographyStylesProvider>
-            </Text>
-            <Text
-              size="xs"
-              weight={700}
-              color={colors.dark[2]}
-            >{`${date.getFullYear()}.${
-              date.getMonth() + 1
-            }.${date.getDate()}`}</Text>
-          </Stack>
+          <Link key={id} href={`/blog/${id}`} passHref>
+            <Anchor component="a" variant="text">
+              <Stack spacing={8}>
+                <Title order={3}>{title}</Title>
+                <Text lineClamp={2}>
+                  <TypographyStylesProvider>
+                    <div dangerouslySetInnerHTML={{ __html: body }} />
+                  </TypographyStylesProvider>
+                </Text>
+                <Text
+                  component="time"
+                  dateTime={publishedAt}
+                  size="xs"
+                  weight={700}
+                  color={colors.dark[2]}
+                >
+                  {dayjs(publishedAt).format("YYYY.MM.DD")}
+                </Text>
+              </Stack>
+            </Anchor>
+          </Link>
         );
       })}
       {isLoading && (
