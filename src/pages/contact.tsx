@@ -28,12 +28,12 @@ const Contact: NextPage = () => {
       className="flex justify-center"
       onSubmit={async (event) => {
         event.preventDefault();
-        const data = await fetch("/api/contact", {
+        await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(form.values),
         });
-        console.log(data);
+        form.reset();
       }}
     >
       <Stack px={16} py={40} className="max-w-5xl flex-auto">
