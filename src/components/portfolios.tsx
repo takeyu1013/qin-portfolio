@@ -29,7 +29,6 @@ export const Portfolios: FC<{
           .slice(0, size)
           .map(({ id, image, title, link, content, startAt, endAt }) => {
             const { url } = image;
-            console.log(endAt);
 
             return (
               <Anchor key={id} href={link} target="_blank" variant="text">
