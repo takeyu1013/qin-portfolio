@@ -32,50 +32,44 @@ export const Portfolios: FC<{
             console.log(endAt);
 
             return (
-              <Link key={id} href={link} passHref>
-                <Anchor component="a" variant="text">
-                  <Stack spacing={8}>
-                    <Image
-                      src={url}
-                      width={358}
-                      alt="With default placeholder"
-                    />
-                    <Title order={3}>{title}</Title>
-                    <Text>{content}</Text>
-                    <Box>
-                      <Text
-                        component="time"
-                        dateTime={startAt}
-                        size="xs"
-                        weight={700}
-                        color={colors.dark[2]}
-                        className="inline"
-                      >
-                        {dayjs(startAt).format("YYYY.MM")}
-                      </Text>
-                      <Text
-                        size="xs"
-                        weight={700}
-                        color={colors.dark[2]}
-                        className="inline"
-                      >
-                        {" "}
-                        -{" "}
-                      </Text>
-                      <Text
-                        component="time"
-                        dateTime={endAt}
-                        size="xs"
-                        weight={700}
-                        color={colors.dark[2]}
-                        className="inline"
-                      >
-                        {endAt && dayjs(endAt).format("YYYY.MM")}
-                      </Text>
-                    </Box>
-                  </Stack>
-                </Anchor>
-              </Link>
+              <Anchor key={id} href={link} target="_blank" variant="text">
+                <Stack spacing={8}>
+                  <Image src={url} width={358} alt="With default placeholder" />
+                  <Title order={3}>{title}</Title>
+                  <Text>{content}</Text>
+                  <Box>
+                    <Text
+                      component="time"
+                      dateTime={startAt}
+                      size="xs"
+                      weight={700}
+                      color={colors.dark[2]}
+                      className="inline"
+                    >
+                      {dayjs(startAt).format("YYYY.MM")}
+                    </Text>
+                    <Text
+                      size="xs"
+                      weight={700}
+                      color={colors.dark[2]}
+                      className="inline"
+                    >
+                      {" "}
+                      -{" "}
+                    </Text>
+                    <Text
+                      component="time"
+                      dateTime={endAt}
+                      size="xs"
+                      weight={700}
+                      color={colors.dark[2]}
+                      className="inline"
+                    >
+                      {endAt && dayjs(endAt).format("YYYY.MM")}
+                    </Text>
+                  </Box>
+                </Stack>
+              </Anchor>
             );
           })}
       </SimpleGrid>
