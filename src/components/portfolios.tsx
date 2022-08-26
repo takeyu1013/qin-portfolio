@@ -10,7 +10,6 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { FC } from "react";
 import { Props } from "src/pages";
 
