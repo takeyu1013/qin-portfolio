@@ -16,9 +16,8 @@ import { Props } from "src/pages";
 
 export const Blogs: FC<{
   size: number;
-  isLoading?: boolean;
   contents: Props["blogs"]["contents"];
-}> = ({ size, isLoading, contents }) => {
+}> = ({ size, contents }) => {
   const { colors } = useMantineTheme();
 
   return (
@@ -50,11 +49,6 @@ export const Blogs: FC<{
           </Link>
         );
       })}
-      {isLoading && (
-        <Center>
-          <Loader color={colors.pink[6]} />
-        </Center>
-      )}
     </Stack>
   );
 };
