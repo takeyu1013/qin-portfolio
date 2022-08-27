@@ -35,10 +35,9 @@ const getKey: SWRInfiniteKeyLoader = (index, previousPageData: Props) => {
 
 const Blog: NextPage<Props> = ({ contents }) => {
   const largerThanXs = useMediaQuery("sm");
-  const { data, size, setSize } = useSWRInfinite<MicroCMSListResponse<Blog>>(
-    getKey,
-    async (url) => (await fetch(url)).json()
-  );
+  const { data, size, setSize, isValidating } = useSWRInfinite<
+    MicroCMSListResponse<Blog>
+  >(getKey, async (url) => (await fetch(url)).json());
   const { colors } = useMantineTheme();
   console.log("size", size);
 
@@ -50,13 +49,16 @@ const Blog: NextPage<Props> = ({ contents }) => {
         className="max-w-5xl"
         style={{ minHeight: largerThanXs ? 638 : 596 }}
       >
-        {data ? (
+        {data && data[0] ? (
           <Stack spacing={24}>
             <Title order={2}>Blog</Title>
             <Divider />
             <InfiniteScroll
               dataLength={10}
               next={() => {
+                if (isValidating) {
+                  return;
+                }
                 setSize(size + 1);
               }}
               hasMore={size * 10 < data[0].totalCount}
@@ -66,38 +68,45 @@ const Blog: NextPage<Props> = ({ contents }) => {
                 </Center>
               }
             >
-              {data.map((blogs) => {
-                return blogs.contents.map(
-                  ({ id, title, body, publishedAt }) => {
-                    return (
-                      <Link key={id} href={`/blog/${id}`} passHref>
-                        <Anchor component="a" variant="text">
-                          <Stack spacing={8}>
-                            <Title order={3}>{title}</Title>
-                            <Text lineClamp={2}>
-                              <TypographyStylesProvider>
-                                <div
-                                  dangerouslySetInnerHTML={{ __html: body }}
-                                />
-                              </TypographyStylesProvider>
-                            </Text>
-                            <Text
-                              component="time"
-                              dateTime={publishedAt}
-                              size="xs"
-                              weight={700}
-                              color={colors.dark[2]}
-                            >
-                              {dayjs(publishedAt).format("YYYY.MM.DD")}
-                            </Text>
-                          </Stack>
-                        </Anchor>
-                      </Link>
-                    );
-                  }
-                );
-              })}
+              <Stack spacing={24}>
+                {data.map((blogs) => {
+                  return blogs.contents.map(
+                    ({ id, title, body, publishedAt }) => {
+                      return (
+                        <Link key={id} href={`/blog/${id}`} passHref>
+                          <Anchor component="a" variant="text">
+                            <Stack spacing={8}>
+                              <Title order={3}>{title}</Title>
+                              <Text lineClamp={2}>
+                                <TypographyStylesProvider>
+                                  <div
+                                    dangerouslySetInnerHTML={{ __html: body }}
+                                  />
+                                </TypographyStylesProvider>
+                              </Text>
+                              <Text
+                                component="time"
+                                dateTime={publishedAt}
+                                size="xs"
+                                weight={700}
+                                color={colors.dark[2]}
+                              >
+                                {dayjs(publishedAt).format("YYYY.MM.DD")}
+                              </Text>
+                            </Stack>
+                          </Anchor>
+                        </Link>
+                      );
+                    }
+                  );
+                })}
+              </Stack>
             </InfiniteScroll>
+            {isValidating && (
+              <Center>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
           </Stack>
         ) : (
           <Blogs size={10} contents={contents} />
