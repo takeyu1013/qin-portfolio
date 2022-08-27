@@ -42,18 +42,20 @@ const Blog: NextPage<Props> = ({ contents }) => {
   const containerRef = useRef();
   const [ref, entry] = useIntersection({
     root: containerRef.current,
-    threshold: 1,
   });
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!entry?.isIntersecting) {
       setLoading(false);
+      return;
     }
-    if (entry?.isIntersecting && !loading) {
-      setLoading(true);
-      setSize(size + 1);
+    if (loading) {
+      return;
     }
-  }, [entry, loading, size, setSize]);
+    setLoading(true);
+    setSize(size + 1);
+  }, [entry, isValidating, loading, size, setSize]);
 
   return (
     <Group position="center" grow>
@@ -99,9 +101,7 @@ const Blog: NextPage<Props> = ({ contents }) => {
           <Blogs size={10} contents={contents} />
         )}
         <Center ref={ref}>
-          {entry?.isIntersecting && isValidating && (
-            <Loader color={colors.pink[6]} />
-          )}
+          {isValidating && <Loader color={colors.pink[6]} />}
         </Center>
       </Box>
     </Group>
