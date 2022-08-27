@@ -84,8 +84,8 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           </Group>
         </SimpleGrid>
       </SimpleGrid>
-      <Group position="center">
-        <Stack spacing={24} className="max-w-5xl flex-auto">
+      <Group position="center" grow>
+        <Stack spacing={24} px={16} className="max-w-5xl">
           <Blogs size={3} contents={blogs.contents} />
           <Center pb={21}>
             <Link href="/blog">
