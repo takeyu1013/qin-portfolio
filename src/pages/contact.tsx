@@ -9,11 +9,14 @@ import {
   Title,
   useMantineColorScheme,
 } from "@mantine/core";
-import { Button } from "src/lib/mantine";
 import { useForm } from "@mantine/hooks";
+
+import { Button, useMediaQuery } from "src/lib/mantine";
 
 const Contact: NextPage = () => {
   const { colorScheme } = useMantineColorScheme();
+  const largerThanXs = useMediaQuery("sm");
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -45,7 +48,12 @@ const Contact: NextPage = () => {
         form.reset();
       }}
     >
-      <Stack px={16} py={40} className="max-w-5xl flex-auto">
+      <Stack
+        px={16}
+        py={40}
+        className="max-w-5xl flex-auto"
+        style={{ minHeight: largerThanXs ? 638 : 596 }}
+      >
         <Title order={2}>Contact</Title>
         <Divider />
         <TextInput

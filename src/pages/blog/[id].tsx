@@ -11,17 +11,25 @@ import {
 import dayjs from "dayjs";
 import { MicroCMSContentId, MicroCMSDate } from "microcms-js-sdk";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { client } from "src/lib/client";
+
 import { Blog } from "src/pages";
+import { useMediaQuery } from "src/lib/mantine";
+import { client } from "src/lib/client";
 
 type Props = Blog & MicroCMSContentId & MicroCMSDate;
 
 const BlogId: NextPage<Props> = ({ title, body, publishedAt }) => {
   const { colors } = useMantineTheme();
+  const largerThanXs = useMediaQuery("sm");
 
   return (
-    <Group py={40} position="center" grow>
-      <Box px={16} className="max-w-5xl">
+    <Group position="center" grow>
+      <Box
+        px={16}
+        py={40}
+        className="max-w-5xl"
+        style={{ minHeight: largerThanXs ? 926 : 596 }}
+      >
         <Stack spacing={20}>
           <Title order={2} className="leading-10">
             {title}
