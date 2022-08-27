@@ -22,7 +22,7 @@ import { useMediaQuery } from "src/lib/mantine";
 import { Blog } from "src/pages";
 import Link from "next/link";
 import dayjs from "dayjs";
-import { useEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 type Props = MicroCMSListResponse<Blog>;
 
@@ -35,27 +35,12 @@ const getKey: SWRInfiniteKeyLoader = (index, previousPageData: Props) => {
 
 const Blog: NextPage<Props> = ({ contents }) => {
   const largerThanXs = useMediaQuery("sm");
-  const { data, size, setSize, isValidating } = useSWRInfinite<
-    MicroCMSListResponse<Blog>
-  >(getKey, async (url) => (await fetch(url)).json());
+  const { data, size, setSize } = useSWRInfinite<MicroCMSListResponse<Blog>>(
+    getKey,
+    async (url) => (await fetch(url)).json()
+  );
   const { colors } = useMantineTheme();
-  const containerRef = useRef();
-  const [ref, entry] = useIntersection({
-    root: containerRef.current,
-  });
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!entry?.isIntersecting) {
-      setLoading(false);
-      return;
-    }
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    setSize(size + 1);
-  }, [entry, isValidating, loading, size, setSize]);
+  console.log("size", size);
 
   return (
     <Group position="center" grow>
@@ -69,40 +54,54 @@ const Blog: NextPage<Props> = ({ contents }) => {
           <Stack spacing={24}>
             <Title order={2}>Blog</Title>
             <Divider />
-            {data.map((blogs) => {
-              return blogs.contents.map(({ id, title, body, publishedAt }) => {
-                return (
-                  <Link key={id} href={`/blog/${id}`} passHref>
-                    <Anchor component="a" variant="text">
-                      <Stack spacing={8}>
-                        <Title order={3}>{title}</Title>
-                        <Text lineClamp={2}>
-                          <TypographyStylesProvider>
-                            <div dangerouslySetInnerHTML={{ __html: body }} />
-                          </TypographyStylesProvider>
-                        </Text>
-                        <Text
-                          component="time"
-                          dateTime={publishedAt}
-                          size="xs"
-                          weight={700}
-                          color={colors.dark[2]}
-                        >
-                          {dayjs(publishedAt).format("YYYY.MM.DD")}
-                        </Text>
-                      </Stack>
-                    </Anchor>
-                  </Link>
+            <InfiniteScroll
+              dataLength={10}
+              next={() => {
+                setSize(size + 1);
+              }}
+              hasMore={size * 10 < data[0].totalCount}
+              loader={
+                <Center>
+                  <Loader color={colors.pink[6]} />
+                </Center>
+              }
+            >
+              {data.map((blogs) => {
+                return blogs.contents.map(
+                  ({ id, title, body, publishedAt }) => {
+                    return (
+                      <Link key={id} href={`/blog/${id}`} passHref>
+                        <Anchor component="a" variant="text">
+                          <Stack spacing={8}>
+                            <Title order={3}>{title}</Title>
+                            <Text lineClamp={2}>
+                              <TypographyStylesProvider>
+                                <div
+                                  dangerouslySetInnerHTML={{ __html: body }}
+                                />
+                              </TypographyStylesProvider>
+                            </Text>
+                            <Text
+                              component="time"
+                              dateTime={publishedAt}
+                              size="xs"
+                              weight={700}
+                              color={colors.dark[2]}
+                            >
+                              {dayjs(publishedAt).format("YYYY.MM.DD")}
+                            </Text>
+                          </Stack>
+                        </Anchor>
+                      </Link>
+                    );
+                  }
                 );
-              });
-            })}
+              })}
+            </InfiniteScroll>
           </Stack>
         ) : (
           <Blogs size={10} contents={contents} />
         )}
-        <Center ref={ref}>
-          {isValidating && <Loader color={colors.pink[6]} />}
-        </Center>
       </Box>
     </Group>
   );
