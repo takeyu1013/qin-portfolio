@@ -15,7 +15,7 @@ const handler = async (
   console.log(req.body);
   const content = req.body;
   const data = await client.create<Contact>({ endpoint: "contact", content });
-  res.status(200).json(data);
+  res.status(201).json(data);
 };
 
 export default handler;
