@@ -58,11 +58,11 @@ const Blog: NextPage<Props> = ({ contents }) => {
         className="max-w-5xl"
         style={{ minHeight: largerThanXs ? 638 : 596 }}
       >
-        <Stack spacing={24}>
-          <Title order={2}>Blog</Title>
-          <Divider />
-          {data ? (
-            data.map(({ contents }) => {
+        {data ? (
+          <Stack spacing={24}>
+            <Title order={2}>Blog</Title>
+            <Divider />
+            {data.map(({ contents }) => {
               return contents.map(({ id, title, body, publishedAt }) => {
                 return (
                   <Link key={id} href={`/blog/${id}`} passHref>
@@ -88,16 +88,16 @@ const Blog: NextPage<Props> = ({ contents }) => {
                   </Link>
                 );
               });
-            })
-          ) : (
-            <Blogs size={10} contents={contents} />
-          )}
-          {(loading || hasNextPage) && (
-            <Center ref={sentryRef}>
-              <Loader color={colors.pink[6]} />
-            </Center>
-          )}
-        </Stack>
+            })}
+          </Stack>
+        ) : (
+          <Blogs size={10} contents={contents} />
+        )}
+        {(loading || hasNextPage) && (
+          <Center ref={sentryRef}>
+            <Loader color={colors.pink[6]} />
+          </Center>
+        )}
       </Box>
     </Group>
   );
