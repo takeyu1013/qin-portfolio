@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import {
   Center,
   Divider,
+  LoadingOverlay,
   Stack,
   Textarea,
   TextInput,
@@ -12,6 +13,7 @@ import {
 import { useForm } from "@mantine/hooks";
 
 import { Button, useMediaQuery } from "src/lib/mantine";
+import { useState } from "react";
 
 const Contact: NextPage = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -30,6 +32,7 @@ const Contact: NextPage = () => {
       email: "Invalid email",
     },
   });
+  const [visible, setVisible] = useState(false);
 
   return (
     <form
@@ -40,12 +43,14 @@ const Contact: NextPage = () => {
           form.errors;
           return;
         }
+        setVisible(true);
         await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(form.values),
         });
         form.reset();
+        setVisible(false);
       }}
     >
       <Stack
@@ -54,6 +59,7 @@ const Contact: NextPage = () => {
         className="max-w-5xl flex-auto"
         style={{ minHeight: largerThanXs ? 638 : 596 }}
       >
+        <LoadingOverlay visible={visible} />
         <Title order={2}>Contact</Title>
         <Divider />
         <TextInput
