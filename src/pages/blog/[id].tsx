@@ -1,3 +1,8 @@
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
+import type { Blog } from "src/components/blogs";
+
 import {
   Box,
   Divider,
@@ -9,14 +14,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { MicroCMSContentId, MicroCMSDate } from "microcms-js-sdk";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-import { Blog } from "src/pages";
 import { useMediaQuery } from "src/lib/mantine";
 import { client } from "src/lib/client";
 
-type Props = Blog & MicroCMSContentId & MicroCMSDate;
+type Props = MicroCMSListResponse<Blog>["contents"][number];
 
 const BlogId: NextPage<Props> = ({ title, body, publishedAt }) => {
   const { colors } = useMantineTheme();
@@ -57,9 +59,10 @@ const BlogId: NextPage<Props> = ({ title, body, publishedAt }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const data = await client.getList({ endpoint: "blog" });
-  const ids = data.contents.map((content) => `/blog/${content.id}`);
+  const paths = data.contents.map((content) => `/blog/${content.id}`);
+
   return {
-    paths: ids,
+    paths,
     fallback: false,
   };
 };
@@ -72,12 +75,12 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({
       notFound: true,
     };
   }
-  const props = await client.getListDetail<Blog>({
-    endpoint: "blog",
-    contentId: params.id,
-  });
-  console.log(props);
-  return { props };
+  return {
+    props: await client.getListDetail<Blog>({
+      endpoint: "blog",
+      contentId: params.id,
+    }),
+  };
 };
 
 export default BlogId;
