@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 
+import { useState } from "react";
 import {
   Center,
   Divider,
@@ -13,18 +14,20 @@ import {
 import { useForm } from "@mantine/hooks";
 
 import { Button, useMediaQuery } from "src/lib/mantine";
-import { useState } from "react";
+
+const initialValues = {
+  email: "",
+  name: "",
+  message: "",
+};
+
+export type Contact = typeof initialValues;
 
 const Contact: NextPage = () => {
   const { colorScheme } = useMantineColorScheme();
   const largerThanXs = useMediaQuery("sm");
-
   const form = useForm({
-    initialValues: {
-      email: "",
-      name: "",
-      message: "",
-    },
+    initialValues,
     validationRules: {
       email: (value) => /^\S+@\S+$/.test(value),
     },
