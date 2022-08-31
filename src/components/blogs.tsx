@@ -1,8 +1,5 @@
 import {
   Anchor,
-  Center,
-  Divider,
-  Loader,
   Stack,
   Text,
   Title,
@@ -10,20 +7,23 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import dayjs from "dayjs";
+import { MicroCMSListResponse } from "microcms-js-sdk";
 import Link from "next/link";
 import { FC } from "react";
-import { Props } from "src/pages";
+
+export type Blog = {
+  title: string;
+  body: string;
+};
 
 export const Blogs: FC<{
   size: number;
-  contents: Props["blogs"]["contents"];
+  contents: MicroCMSListResponse<Blog>["contents"];
 }> = ({ size, contents }) => {
   const { colors } = useMantineTheme();
 
   return (
     <Stack spacing={24}>
-      <Title order={2}>Blog</Title>
-      <Divider />
       {contents.slice(0, size).map(({ id, title, body, publishedAt }) => {
         return (
           <Link key={id} href={`/blog/${id}`} passHref>

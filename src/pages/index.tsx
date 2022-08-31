@@ -1,4 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
+import type { Blog } from "src/components/blogs";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -24,13 +27,7 @@ import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
-import { MicroCMSListResponse } from "microcms-js-sdk";
 import { client } from "src/lib/client";
-
-export type Blog = {
-  title: string;
-  body: string;
-};
 
 export type Portfolio = {
   title: string;
@@ -61,7 +58,9 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
       <SimpleGrid
         px={16}
         style={{ backgroundColor: colors.pink[6] }}
-        className={`h-64 items-center ${largerThanXs && "flex justify-center"}`}
+        className={`h-64 items-center ${
+          largerThanXs ? "flex justify-center" : ""
+        }`}
       >
         <SimpleGrid
           className={
@@ -86,6 +85,8 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
       </SimpleGrid>
       <Group position="center" grow>
         <Stack spacing={24} px={16} className="max-w-5xl">
+          <Title order={2}>Blog</Title>
+          <Divider />
           <Blogs size={3} contents={blogs.contents} />
           <Center pb={21}>
             <Link href="/blog">
@@ -242,7 +243,6 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const blogs = await client.getList<Blog>({ endpoint: "blog" });
   const portfolios = await client.getList<Portfolio>({ endpoint: "portfolio" });
-  console.log(portfolios);
 
   return {
     props: { blogs, portfolios },
