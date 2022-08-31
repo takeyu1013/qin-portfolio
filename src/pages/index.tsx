@@ -2,6 +2,7 @@ import type { GetStaticProps, NextPage } from "next";
 import type { MicroCMSListResponse } from "microcms-js-sdk";
 
 import type { Blog } from "src/components/blogs";
+import type { Portfolio } from "src/components/portfolios";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -28,19 +29,6 @@ import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
 import { client } from "src/lib/client";
-
-export type Portfolio = {
-  title: string;
-  content: string;
-  link: string;
-  image: {
-    url: string;
-    height: number;
-    width: number;
-  };
-  startAt: string;
-  endAt: string;
-};
 
 export type Props = {
   blogs: MicroCMSListResponse<Blog>;
@@ -102,8 +90,10 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           </Center>
         </Stack>
       </Group>
-      <Group position="center">
-        <Stack spacing={24} className="max-w-5xl flex-auto">
+      <Group position="center" grow>
+        <Stack spacing={24} px={16} className="max-w-5xl">
+          <Title order={2}>Portfolio</Title>
+          <Divider />
           <Portfolios
             size={largerThanXs ? 6 : 3}
             contents={portfolios.contents}

@@ -1,25 +1,92 @@
-import { Box } from "@mantine/core";
-import { MicroCMSListResponse } from "microcms-js-sdk";
 import type { GetStaticProps, NextPage } from "next";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
+import type { Portfolio } from "src/components/portfolios";
+
+import {
+  Center,
+  Divider,
+  Group,
+  Loader,
+  Stack,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
+import useSWRInfinite from "swr/infinite";
+import useInfiniteScroll from "react-infinite-scroll-hook";
 
 import { Portfolios } from "src/components/portfolios";
+import { useMediaQuery } from "src/lib/mantine";
 import { client } from "src/lib/client";
-import { Portfolio } from "src/pages";
 
 type Props = MicroCMSListResponse<Portfolio>;
 
 const Portfolio: NextPage<Props> = ({ contents }) => {
+  const largerThanXs = useMediaQuery("sm");
+  const { colors } = useMantineTheme();
+  const { data, size, setSize, error } = useSWRInfinite<
+    MicroCMSListResponse<Portfolio>
+  >(
+    (index, previousPageData) => {
+      if (previousPageData && !previousPageData.contents.length) {
+        return null;
+      }
+      return `/api/portfolio?offset=${index * 10}`;
+    },
+    async (url) => (await fetch(url)).json()
+  );
+  const loading = !error && !data;
+  const hasNextPage = data === undefined || size * 10 < data[0].totalCount;
+  const [sentryRef] = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: () => {
+      setSize(size + 1);
+    },
+    disabled: !!error,
+  });
+
   return (
-    <Box py={40} className="flex justify-center">
-      <Portfolios size={10} contents={contents} />
-    </Box>
+    <Group position="center" grow>
+      <Stack
+        spacing={24}
+        px={16}
+        py={40}
+        className="max-w-5xl"
+        style={{ minHeight: largerThanXs ? 638 : 596 }}
+      >
+        <Title order={2}>Portfolio</Title>
+        <Divider />
+        {data ? (
+          <Stack spacing={24}>
+            {data.map(({ contents }, index) => {
+              return (
+                <Portfolios
+                  key={index}
+                  size={contents.length}
+                  contents={contents}
+                />
+              );
+            })}
+            {(loading || hasNextPage) && (
+              <Center ref={sentryRef}>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
+          </Stack>
+        ) : (
+          <Portfolios size={10} contents={contents} />
+        )}
+      </Stack>
+    </Group>
   );
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const data = await client.getList<Portfolio>({ endpoint: "portfolio" });
+  const props = await client.getList<Portfolio>({ endpoint: "portfolio" });
+
   return {
-    props: data,
+    props,
   };
 };
 
