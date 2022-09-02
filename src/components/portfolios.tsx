@@ -33,7 +33,7 @@ export const Portfolios: FC<{
   const { colors } = useMantineTheme();
 
   return (
-    <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
+    <>
       {contents
         .slice(0, size)
         .map(({ id, image, title, link, content, startAt, endAt }) => {
@@ -80,6 +80,6 @@ export const Portfolios: FC<{
             </Anchor>
           );
         })}
-    </SimpleGrid>
+    </>
   );
 };

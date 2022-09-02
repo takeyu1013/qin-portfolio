@@ -8,6 +8,7 @@ import {
   Divider,
   Group,
   Loader,
+  SimpleGrid,
   Stack,
   Title,
   useMantineTheme,
@@ -57,25 +58,27 @@ const Portfolio: NextPage<Props> = ({ contents }) => {
       >
         <Title order={2}>Portfolio</Title>
         <Divider />
-        {data ? (
-          <Stack spacing={24}>
-            {data.map(({ contents }, index) => {
-              return (
-                <Portfolios
-                  key={index}
-                  size={contents.length}
-                  contents={contents}
-                />
-              );
-            })}
-            {(loading || hasNextPage) && (
-              <Center ref={sentryRef}>
-                <Loader color={colors.pink[6]} />
-              </Center>
-            )}
-          </Stack>
-        ) : (
-          <Portfolios size={10} contents={contents} />
+        <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
+          {data ? (
+            <>
+              {data.map(({ contents }, index) => {
+                return (
+                  <Portfolios
+                    key={index}
+                    size={contents.length}
+                    contents={contents}
+                  />
+                );
+              })}
+            </>
+          ) : (
+            <Portfolios size={10} contents={contents} />
+          )}
+        </SimpleGrid>
+        {(loading || hasNextPage) && (
+          <Center ref={sentryRef}>
+            <Loader color={colors.pink[6]} />
+          </Center>
         )}
       </Stack>
     </Group>
