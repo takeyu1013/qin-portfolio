@@ -25,7 +25,7 @@ type Props = MicroCMSListResponse<Portfolio>;
 const Portfolio: NextPage<Props> = (props) => {
   const largerThanXs = useMediaQuery("sm");
   const { colors } = useMantineTheme();
-  const { data, size, setSize, error } = useSWRInfinite<
+  const { data, size, setSize, error, isValidating } = useSWRInfinite<
     MicroCMSListResponse<Portfolio>
   >(
     (index, previousPageData) => {
@@ -37,8 +37,8 @@ const Portfolio: NextPage<Props> = (props) => {
     async (url) => (await fetch(url)).json(),
     { fallbackData: [props] }
   );
-  const loading = !error && !data;
-  const hasNextPage = data === undefined || size * 10 < data[0].totalCount;
+  const loading = !error && (!data || isValidating);
+  const hasNextPage = !!data && size * 10 < data[0].totalCount;
   const [sentryRef] = useInfiniteScroll({
     loading,
     hasNextPage,
