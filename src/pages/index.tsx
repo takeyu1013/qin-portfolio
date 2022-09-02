@@ -103,10 +103,12 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
         <Stack spacing={24} px={16} className="max-w-5xl">
           <Title order={2}>Portfolio</Title>
           <Divider />
-          <Portfolios
-            size={largerThanXs ? 6 : 3}
-            contents={portfolios.contents}
-          />
+          <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
+            <Portfolios
+              size={largerThanXs ? 6 : 3}
+              contents={portfolios.contents}
+            />
+          </SimpleGrid>
           <Center pb={21}>
             <Link href="/portfolio">
               <Button
