@@ -21,7 +21,7 @@ import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Blog>;
 
-const Blog: NextPage<Props> = ({ contents }) => {
+const Blog: NextPage<Props> = (props) => {
   const largerThanXs = useMediaQuery("sm");
   const { colors } = useMantineTheme();
   const { data, size, setSize, error } = useSWRInfinite<
@@ -33,7 +33,8 @@ const Blog: NextPage<Props> = ({ contents }) => {
       }
       return `/api/blog?offset=${index * 10}`;
     },
-    async (url) => (await fetch(url)).json()
+    async (url) => (await fetch(url)).json(),
+    { fallbackData: [props] }
   );
   const loading = !error && !data;
   const hasNextPage = data === undefined || size * 10 < data[0].totalCount;
@@ -71,7 +72,9 @@ const Blog: NextPage<Props> = ({ contents }) => {
             )}
           </Stack>
         ) : (
-          <Blogs size={10} contents={contents} />
+          <Center>
+            <Loader color={colors.pink[6]} />
+          </Center>
         )}
       </Stack>
     </Group>

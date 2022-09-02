@@ -22,7 +22,7 @@ import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Portfolio>;
 
-const Portfolio: NextPage<Props> = ({ contents }) => {
+const Portfolio: NextPage<Props> = (props) => {
   const largerThanXs = useMediaQuery("sm");
   const { colors } = useMantineTheme();
   const { data, size, setSize, error } = useSWRInfinite<
@@ -34,7 +34,8 @@ const Portfolio: NextPage<Props> = ({ contents }) => {
       }
       return `/api/portfolio?offset=${index * 10}`;
     },
-    async (url) => (await fetch(url)).json()
+    async (url) => (await fetch(url)).json(),
+    { fallbackData: [props] }
   );
   const loading = !error && !data;
   const hasNextPage = data === undefined || size * 10 < data[0].totalCount;
@@ -58,9 +59,12 @@ const Portfolio: NextPage<Props> = ({ contents }) => {
       >
         <Title order={2}>Portfolio</Title>
         <Divider />
-        <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
-          {data ? (
-            <>
+        {data ? (
+          <>
+            <SimpleGrid
+              spacing={24}
+              breakpoints={[{ minWidth: "sm", cols: 3 }]}
+            >
               {data.map(({ contents }, index) => {
                 return (
                   <Portfolios
@@ -70,13 +74,15 @@ const Portfolio: NextPage<Props> = ({ contents }) => {
                   />
                 );
               })}
-            </>
-          ) : (
-            <Portfolios size={10} contents={contents} />
-          )}
-        </SimpleGrid>
-        {(loading || hasNextPage) && (
-          <Center ref={sentryRef}>
+            </SimpleGrid>
+            {(loading || hasNextPage) && (
+              <Center ref={sentryRef}>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
+          </>
+        ) : (
+          <Center>
             <Loader color={colors.pink[6]} />
           </Center>
         )}
