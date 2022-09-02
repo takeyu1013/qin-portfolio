@@ -5,7 +5,6 @@ import type { Blog } from "src/components/blogs";
 
 import { useRouter } from "next/router";
 import {
-  Box,
   Center,
   Divider,
   Group,
@@ -29,24 +28,29 @@ const BlogId: NextPage<Props> = (props) => {
   const largerThanXs = useMediaQuery("sm");
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useSWR<Props>(id ? `/api/blog/${id}` : null, async (url) =>
-    (await fetch(url)).json()
+  const { data } = useSWR<Props>(
+    id ? `/api/blog/${id}` : null,
+    async (url) => (await fetch(url)).json(),
+    { fallbackData: props }
   );
 
-  if (!data && !props.title) {
+  if (!data || !data.id) {
     return (
-      <Box style={{ minHeight: largerThanXs ? 926 : 596 }}>
-        <Group position="center">
-          <Stack px={16} py={40} className="max-w-5xl">
-            <Center>
-              <Loader color={colors.pink[6]} />
-            </Center>
-          </Stack>
-        </Group>
-      </Box>
+      <Group position="center" grow>
+        <Stack
+          px={16}
+          py={40}
+          className="max-w-5xl"
+          style={{ minHeight: largerThanXs ? 926 : 596 }}
+        >
+          <Center>
+            <Loader color={colors.pink[6]} />
+          </Center>
+        </Stack>
+      </Group>
     );
   }
-  const { title, body, publishedAt } = data || props;
+  const { title, body, publishedAt } = data;
 
   return (
     <Group position="center" grow>
@@ -98,12 +102,18 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({
       notFound: true,
     };
   }
-  return {
-    props: await client.getListDetail<Blog>({
-      endpoint: "blog",
-      contentId: params.id,
-    }),
-  };
+  try {
+    return {
+      props: await client.getListDetail<Blog>({
+        endpoint: "blog",
+        contentId: params.id,
+      }),
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default BlogId;
