@@ -4,6 +4,7 @@ import type { MicroCMSListResponse } from "microcms-js-sdk";
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
 
+import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -35,6 +36,26 @@ export type Props = {
   portfolios: MicroCMSListResponse<Portfolio>;
 };
 
+const Cover: FC = () => {
+  return (
+    <>
+      <Box>
+        <Title order={2} className="text-white">
+          Takeyu IT University
+        </Title>
+        <Text size="md" className="text-white">
+          たけゆのポートフォリオのためのページです
+        </Text>
+      </Box>
+      <Group>
+        <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
+        <Image src="/facebook.svg" alt="facebook" width={25} height={25} />
+        <Image src="/rss.svg" alt="rss" width={25} height={25} />
+      </Group>
+    </>
+  );
+};
+
 const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
@@ -43,34 +64,22 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
-      <SimpleGrid
-        px={16}
+      <Group
+        position="center"
+        grow
         style={{ backgroundColor: colors.pink[6] }}
-        className={`h-64 items-center ${
-          largerThanXs ? "flex justify-center" : ""
-        }`}
+        className="h-64"
       >
-        <SimpleGrid
-          className={
-            largerThanXs ? "flex max-w-5xl flex-auto justify-between" : ""
-          }
-          px={largerThanXs ? 16 : 0}
-        >
-          <Box>
-            <Title order={2} className="text-white">
-              Takeyu IT University
-            </Title>
-            <Text size="md" className="text-white">
-              たけゆのポートフォリオのためのページです
-            </Text>
-          </Box>
-          <Group>
-            <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
-            <Image src="/facebook.svg" alt="facebook" width={25} height={25} />
-            <Image src="/rss.svg" alt="rss" width={25} height={25} />
+        {largerThanXs ? (
+          <Group position="apart" px={16} className="max-w-5xl">
+            <Cover />
           </Group>
-        </SimpleGrid>
-      </SimpleGrid>
+        ) : (
+          <Stack spacing={30} px={16}>
+            <Cover />
+          </Stack>
+        )}
+      </Group>
       <Group position="center" grow>
         <Stack spacing={24} px={16} className="max-w-5xl">
           <Title order={2}>Blog</Title>
