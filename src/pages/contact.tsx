@@ -10,6 +10,7 @@ import {
   TextInput,
   Title,
   useMantineColorScheme,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 
@@ -25,6 +26,7 @@ export type Contact = typeof initialValues;
 
 const Contact: NextPage = () => {
   const { colorScheme } = useMantineColorScheme();
+  const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
   const form = useForm({
     initialValues,
@@ -62,7 +64,10 @@ const Contact: NextPage = () => {
         className="max-w-5xl flex-auto"
         style={{ minHeight: largerThanXs ? 638 : 596 }}
       >
-        <LoadingOverlay visible={visible} />
+        <LoadingOverlay
+          loaderProps={{ color: colors.pink[6] }}
+          visible={visible}
+        />
         <Title order={2}>Contact</Title>
         <Divider />
         <TextInput
