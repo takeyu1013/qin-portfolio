@@ -1,10 +1,10 @@
+import type { FC } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import type { MicroCMSListResponse } from "microcms-js-sdk";
 
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
 
-import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {

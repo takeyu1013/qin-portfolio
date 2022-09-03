@@ -15,11 +15,11 @@ import {
   TypographyStylesProvider,
   useMantineTheme,
 } from "@mantine/core";
+import useSWR from "swr";
 import dayjs from "dayjs";
 
 import { useMediaQuery } from "src/lib/mantine";
 import { client } from "src/lib/client";
-import useSWR from "swr";
 
 type Props = MicroCMSListResponse<Blog>["contents"][number];
 
