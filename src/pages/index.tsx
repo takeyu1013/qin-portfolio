@@ -6,8 +6,8 @@ import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
 
 import Link from "next/link";
-import Image from "next/image";
 import {
+  Anchor,
   Avatar,
   Box,
   Center,
@@ -23,6 +23,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
+import { FaTwitter, FaFacebook, FaRss } from "react-icons/fa";
 import { IconGitFork, IconStar } from "@tabler/icons";
 
 import { Button } from "src/lib/mantine/Button";
@@ -48,9 +49,16 @@ const Cover: FC = () => {
         </Text>
       </Box>
       <Group>
-        <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
-        <Image src="/facebook.svg" alt="facebook" width={25} height={25} />
-        <Image src="/rss.svg" alt="rss" width={25} height={25} />
+        <Anchor href="https://twitter.com/takeyu1013" target="_blank">
+          <FaTwitter size={25} color="white" />
+        </Anchor>
+        <Anchor
+          href="https://www.facebook.com/yuto.takeuchi.71"
+          target="_blank"
+        >
+          <FaFacebook size={25} color="white" />
+        </Anchor>
+        <FaRss size={25} color="white" />
       </Group>
     </>
   );
