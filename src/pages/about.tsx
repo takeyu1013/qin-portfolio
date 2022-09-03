@@ -1,11 +1,20 @@
 import type { NextPage } from "next";
 
-import { Box, Divider, Stack, Text, Title } from "@mantine/core";
+import { Divider, Group, Stack, Text, Title } from "@mantine/core";
+
+import { useMediaQuery } from "src/lib/mantine";
 
 const About: NextPage = () => {
+  const largerThanXs = useMediaQuery("sm");
+
   return (
-    <Box className="flex justify-center">
-      <Stack px={16} py={40} className="max-w-5xl flex-auto">
+    <Group position="center" grow>
+      <Stack
+        px={16}
+        py={40}
+        className="max-w-5xl"
+        style={{ minHeight: largerThanXs ? 638 : 596 }}
+      >
         <Title order={2}>About</Title>
         <Divider />
         <Title order={3}>Yuto Takeuchi</Title>
@@ -14,7 +23,7 @@ const About: NextPage = () => {
           Certified Solutions Architect - Associate 合格済。
         </Text>
       </Stack>
-    </Box>
+    </Group>
   );
 };
 

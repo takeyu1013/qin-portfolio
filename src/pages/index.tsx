@@ -1,8 +1,13 @@
-import type { NextPage } from "next";
+import type { FC } from "react";
+import type { GetStaticProps, NextPage } from "next";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
+import type { Blog } from "src/components/blogs";
+import type { Portfolio } from "src/components/portfolios";
 
 import Link from "next/link";
-import Image from "next/image";
 import {
+  Anchor,
   Avatar,
   Box,
   Center,
@@ -18,14 +23,48 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
+import { FaTwitter, FaFacebook, FaRss } from "react-icons/fa";
 import { IconGitFork, IconStar } from "@tabler/icons";
 
 import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
+import { client } from "src/lib/client";
 
-const Home: NextPage = () => {
+export type Props = {
+  blogs: MicroCMSListResponse<Blog>;
+  portfolios: MicroCMSListResponse<Portfolio>;
+};
+
+const Cover: FC = () => {
+  return (
+    <>
+      <Box>
+        <Title order={2} className="text-white">
+          Takeyu IT University
+        </Title>
+        <Text size="md" className="text-white">
+          たけゆのポートフォリオのためのページです
+        </Text>
+      </Box>
+      <Group>
+        <Anchor href="https://twitter.com/takeyu1013" target="_blank">
+          <FaTwitter size={25} color="white" />
+        </Anchor>
+        <Anchor
+          href="https://www.facebook.com/yuto.takeuchi.71"
+          target="_blank"
+        >
+          <FaFacebook size={25} color="white" />
+        </Anchor>
+        <FaRss size={25} color="white" />
+      </Group>
+    </>
+  );
+};
+
+const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const { colors } = useMantineTheme();
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
@@ -33,35 +72,27 @@ const Home: NextPage = () => {
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
-      <SimpleGrid
-        px={16}
+      <Group
+        position="center"
+        grow
         style={{ backgroundColor: colors.pink[6] }}
-        className={`h-64 items-center ${largerThanXs && "flex justify-center"}`}
+        className="h-64"
       >
-        <SimpleGrid
-          className={
-            largerThanXs ? "flex max-w-5xl flex-auto justify-between" : ""
-          }
-          px={largerThanXs ? 16 : 0}
-        >
-          <Box>
-            <Title order={2} className="text-white">
-              Takeyu IT University
-            </Title>
-            <Text size="md" className="text-white">
-              たけゆのポートフォリオのためのページです
-            </Text>
-          </Box>
-          <Group>
-            <Image src="/twitter.svg" alt="twitter" width={25} height={25} />
-            <Image src="/facebook.svg" alt="facebook" width={25} height={25} />
-            <Image src="/rss.svg" alt="rss" width={25} height={25} />
+        {largerThanXs ? (
+          <Group position="apart" px={16} className="max-w-5xl">
+            <Cover />
           </Group>
-        </SimpleGrid>
-      </SimpleGrid>
-      <Group position="center">
-        <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Blogs size={3} />
+        ) : (
+          <Stack spacing={30} px={16}>
+            <Cover />
+          </Stack>
+        )}
+      </Group>
+      <Group position="center" grow>
+        <Stack spacing={24} px={16} className="max-w-5xl">
+          <Title order={2}>Blog</Title>
+          <Divider />
+          <Blogs size={3} contents={blogs.contents} />
           <Center pb={21}>
             <Link href="/blog">
               <Button
@@ -76,9 +107,16 @@ const Home: NextPage = () => {
           </Center>
         </Stack>
       </Group>
-      <Group position="center">
-        <Stack spacing={24} className="max-w-5xl flex-auto">
-          <Portfolios size={largerThanXs ? 6 : 3} />
+      <Group position="center" grow>
+        <Stack spacing={24} px={16} className="max-w-5xl">
+          <Title order={2}>Portfolio</Title>
+          <Divider />
+          <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
+            <Portfolios
+              size={largerThanXs ? 6 : 3}
+              contents={portfolios.contents}
+            />
+          </SimpleGrid>
           <Center pb={21}>
             <Link href="/portfolio">
               <Button
@@ -209,6 +247,15 @@ const Home: NextPage = () => {
       </Group>
     </Stack>
   );
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const blogs = await client.getList<Blog>({ endpoint: "blog" });
+  const portfolios = await client.getList<Portfolio>({ endpoint: "portfolio" });
+
+  return {
+    props: { blogs, portfolios },
+  };
 };
 
 export default Home;

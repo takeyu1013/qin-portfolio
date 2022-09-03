@@ -1,4 +1,6 @@
 import {
+  Anchor,
+  Box,
   Divider,
   Image,
   SimpleGrid,
@@ -7,36 +9,77 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
+import dayjs from "dayjs";
+import { MicroCMSListResponse } from "microcms-js-sdk";
 import { FC } from "react";
 
-export const Portfolios: FC<{ size: number }> = ({ size }) => {
+export type Portfolio = {
+  title: string;
+  content: string;
+  link: string;
+  image: {
+    url: string;
+    height: number;
+    width: number;
+  };
+  startAt: string;
+  endAt: string;
+};
+
+export const Portfolios: FC<{
+  size: number;
+  contents: MicroCMSListResponse<Portfolio>["contents"];
+}> = ({ size, contents }) => {
   const { colors } = useMantineTheme();
 
   return (
-    <Stack spacing={24} px={16} py={0} className="max-w-5xl flex-auto">
-      <Title order={2}>Portfolio</Title>
-      <Divider />
-      <SimpleGrid spacing={24} breakpoints={[{ minWidth: "sm", cols: 3 }]}>
-        {[...Array(size)].map((_, index) => {
+    <>
+      {contents
+        .slice(0, size)
+        .map(({ id, image, title, link, content, startAt, endAt }) => {
+          const { url } = image;
+
           return (
-            <Stack key={index} spacing={8}>
-              <Image
-                width={358}
-                height={184}
-                alt="With default placeholder"
-                withPlaceholder
-              />
-              <Title order={3}>IT KINGDOM</Title>
-              <Text>
-                当サロンのLPページ。React、Next.js、TypeScriptなどのモダンな技術を用いて作られています。初心者にちょうど良い難易度の制作物です。
-              </Text>
-              <Text size="xs" weight={700} color={colors.dark[2]}>
-                2021.10 - 2021.12
-              </Text>
-            </Stack>
+            <Anchor key={id} href={link} target="_blank" variant="text">
+              <Stack spacing={8}>
+                <Image src={url} width={358} alt="With default placeholder" />
+                <Title order={3}>{title}</Title>
+                <Text>{content}</Text>
+                <Box>
+                  <Text
+                    component="time"
+                    dateTime={startAt}
+                    size="xs"
+                    weight={700}
+                    color={colors.dark[2]}
+                    className="inline"
+                  >
+                    {dayjs(startAt).format("YYYY.MM")}
+                  </Text>
+                  <Text
+                    size="xs"
+                    weight={700}
+                    color={colors.dark[2]}
+                    className="inline"
+                  >
+                    {" "}
+                    -{" "}
+                  </Text>
+                  <Text
+                    component="time"
+                    dateTime={endAt}
+                    size="xs"
+                    weight={700}
+                    color={colors.dark[2]}
+                    className="inline"
+                  >
+                    {endAt && dayjs(endAt).format("YYYY.MM")}
+                  </Text>
+                </Box>
+              </Stack>
+            </Anchor>
           );
         })}
-      </SimpleGrid>
-    </Stack>
+    </>
   );
 };
