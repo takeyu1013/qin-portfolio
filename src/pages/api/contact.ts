@@ -5,11 +5,18 @@ import type { Contact } from "src/pages/contact";
 
 import { client } from "src/lib/client";
 
-const isContact = (contact: any): contact is Contact => {
+const isNotNullish = (data: unknown): data is Record<string, unknown> => {
+  return data != null;
+};
+
+const isContact = (contact: unknown): contact is Contact => {
+  if (!isNotNullish(contact)) {
+    return false;
+  }
   return (
-    contact.email !== undefined &&
-    contact.name !== undefined &&
-    contact.message !== undefined
+    typeof contact.email === "string" &&
+    typeof contact.name === "string" &&
+    typeof contact.message === "string"
   );
 };
 
