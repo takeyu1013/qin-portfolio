@@ -1,5 +1,4 @@
 import type { AppProps } from "next/app";
-import { ColorScheme, ColorSchemeProvider, Title } from "@mantine/core";
 
 import "src/lib/tailwind.css";
 import { useState } from "react";
@@ -9,6 +8,8 @@ import {
   Anchor,
   AppShell,
   Burger,
+  ColorScheme,
+  ColorSchemeProvider,
   Drawer,
   Footer,
   Group,
@@ -16,10 +17,12 @@ import {
   List,
   MantineProvider,
   Text,
+  Title,
   useMantineTheme,
 } from "@mantine/core";
-import { useMediaQuery } from "src/lib/mantine";
 import { IconMoon, IconSun } from "@tabler/icons";
+
+import { useMediaQuery } from "src/lib/mantine";
 import { pagesPath } from "src/lib/$path";
 
 function App({ Component, pageProps }: AppProps) {

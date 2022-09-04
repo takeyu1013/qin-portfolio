@@ -1,17 +1,16 @@
+import type { FC } from "react";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
 import {
   Anchor,
   Box,
-  Divider,
   Image,
-  SimpleGrid,
   Stack,
   Text,
   Title,
   useMantineTheme,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { MicroCMSListResponse } from "microcms-js-sdk";
-import { FC } from "react";
 
 export type Portfolio = {
   title: string;

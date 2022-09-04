@@ -1,3 +1,6 @@
+import type { FC } from "react";
+import type { MicroCMSListResponse } from "microcms-js-sdk";
+
 import {
   Anchor,
   Stack,
@@ -7,9 +10,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { MicroCMSListResponse } from "microcms-js-sdk";
 import Link from "next/link";
-import { FC } from "react";
 
 export type Blog = {
   title: string;
