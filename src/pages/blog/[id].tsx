@@ -30,6 +30,7 @@ const Outer: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Group position="center" grow>
       <Stack
+        spacing={24}
         px={16}
         py={40}
         className="max-w-5xl"
@@ -64,9 +65,7 @@ const BlogId: NextPage<Props> = (fallbackData) => {
 
   return (
     <Outer>
-      <Title order={2} className="leading-10">
-        {title}
-      </Title>
+      <Title order={2}>{title}</Title>
       <Divider />
       <Stack spacing={8}>
         <Text
