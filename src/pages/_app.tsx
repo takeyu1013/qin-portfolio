@@ -67,87 +67,90 @@ function App({ Component, pageProps }: AppProps) {
           header={
             <Header
               height={65}
-              p="md"
-              className="mx-auto flex max-w-5xl items-center justify-between"
+              className="flex justify-center border-none"
+              fixed
             >
-              {largerThanXs || (
-                <>
-                  <Burger
-                    opened={opened}
-                    onClick={() => setOpened((opened) => !opened)}
-                    size="sm"
-                    color={colors.gray[6]}
-                  />
-                  <Drawer
-                    opened={opened}
-                    onClose={() => setOpened(false)}
-                    size="100%"
-                    styles={{
-                      drawer: { backgroundColor: colors.pink[6] },
-                      header: { height: 65, margin: 0, paddingLeft: 16 },
-                      title: { display: "none" },
-                      closeButton: { color: "white" },
-                    }}
-                  >
-                    <List px={24} py={20} spacing={16}>
-                      {paths.map(([title, url], index) => {
-                        return (
-                          <List.Item key={index}>
-                            <Link href={url} passHref>
-                              <Anchor
-                                component="a"
-                                variant="text"
-                                weight={700}
-                                style={{ fontSize: 28, color: "white" }}
-                                onClick={() => setOpened(false)}
-                              >
-                                {title[0].toUpperCase() + title.slice(1)}
-                              </Anchor>
-                            </Link>
-                          </List.Item>
-                        );
-                      })}
-                    </List>
-                  </Drawer>
-                </>
-              )}
-              <Title order={4}>
-                <Link href="/">
-                  <a>Takeyu IT University</a>
-                </Link>
-              </Title>
-              <Group>
-                {largerThanXs && (
+              <Group px={16} position="apart" className="max-w-5xl flex-grow">
+                {largerThanXs || (
                   <>
-                    {paths.map(([title, url], index) => {
-                      return (
-                        <Link key={index} href={url} passHref>
-                          <Anchor
-                            component="a"
-                            variant="text"
-                            weight={700}
-                            size="lg"
-                            onClick={() => setOpened(false)}
-                          >
-                            {title[0].toUpperCase() + title.slice(1)}
-                          </Anchor>
-                        </Link>
-                      );
-                    })}
+                    <Burger
+                      opened={opened}
+                      onClick={() => setOpened((opened) => !opened)}
+                      size="sm"
+                      color={colors.gray[6]}
+                    />
+                    <Drawer
+                      opened={opened}
+                      onClose={() => setOpened(false)}
+                      size="100%"
+                      styles={{
+                        drawer: { backgroundColor: colors.pink[6] },
+                        header: { height: 65, margin: 0, paddingLeft: 16 },
+                        title: { display: "none" },
+                        closeButton: { color: "white" },
+                      }}
+                    >
+                      <List px={24} py={20} spacing={16}>
+                        {paths.map(([title, url], index) => {
+                          return (
+                            <List.Item key={index}>
+                              <Link href={url} passHref>
+                                <Anchor
+                                  component="a"
+                                  variant="text"
+                                  weight={700}
+                                  style={{ fontSize: 28, color: "white" }}
+                                  onClick={() => setOpened(false)}
+                                >
+                                  {title[0].toUpperCase() + title.slice(1)}
+                                </Anchor>
+                              </Link>
+                            </List.Item>
+                          );
+                        })}
+                      </List>
+                    </Drawer>
                   </>
                 )}
-                <ActionIcon
-                  variant="default"
-                  onClick={() => toggleColorScheme()}
-                  size="lg"
-                  radius="md"
-                >
-                  {dark ? <IconSun /> : <IconMoon />}
-                </ActionIcon>
+                <Title order={4}>
+                  <Link href="/">
+                    <a>Takeyu IT University</a>
+                  </Link>
+                </Title>
+                <Group>
+                  {largerThanXs && (
+                    <>
+                      {paths.map(([title, url], index) => {
+                        return (
+                          <Link key={index} href={url} passHref>
+                            <Anchor
+                              component="a"
+                              variant="text"
+                              weight={700}
+                              size="lg"
+                              onClick={() => setOpened(false)}
+                            >
+                              {title[0].toUpperCase() + title.slice(1)}
+                            </Anchor>
+                          </Link>
+                        );
+                      })}
+                    </>
+                  )}
+                  <ActionIcon
+                    variant="default"
+                    onClick={() => toggleColorScheme()}
+                    size="lg"
+                    radius="md"
+                  >
+                    {dark ? <IconSun /> : <IconMoon />}
+                  </ActionIcon>
+                </Group>
               </Group>
             </Header>
           }
           padding={0}
+          styles={{ main: { paddingTop: 65 } }}
         >
           <Component {...pageProps} />
         </AppShell>
