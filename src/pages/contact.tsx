@@ -25,10 +25,7 @@ const initialValues = {
 export type Contact = typeof initialValues;
 
 const Contact: NextPage = () => {
-  const { colorScheme } = useMantineColorScheme();
-  const { colors } = useMantineTheme();
-  const largerThanXs = useMediaQuery("sm");
-  const form = useForm({
+  const { validate, reset, values, getInputProps } = useForm({
     initialValues,
     validationRules: {
       email: (value) => /^\S+@\S+$/.test(value),
@@ -37,56 +34,54 @@ const Contact: NextPage = () => {
       email: "Invalid email",
     },
   });
+  const largerThanXs = useMediaQuery("sm");
+  const { colorScheme } = useMantineColorScheme();
   const [visible, setVisible] = useState(false);
+  const { colors } = useMantineTheme();
 
   return (
     <form
       className="flex justify-center"
       onSubmit={async (event) => {
         event.preventDefault();
-        if (!form.validate()) {
-          form.errors;
+        if (!validate()) {
           return;
         }
         setVisible(true);
         await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-type": "application/json" },
-          body: JSON.stringify(form.values),
+          body: JSON.stringify(values),
         });
-        form.reset();
+        reset();
         setVisible(false);
       }}
     >
       <Stack
         px={16}
         py={40}
-        className="max-w-5xl flex-auto"
+        className="max-w-5xl flex-grow"
         style={{ minHeight: largerThanXs ? 638 : 596 }}
       >
-        <LoadingOverlay
-          loaderProps={{ color: colors.pink[6] }}
-          visible={visible}
-        />
         <Title order={2}>Contact</Title>
         <Divider />
         <TextInput
           required
           label="Email"
           placeholder="your@email.com"
-          {...form.getInputProps("email")}
+          {...getInputProps("email")}
         />
         <TextInput
           required
           label="Name"
           placeholder="Taro Yamada"
-          {...form.getInputProps("name")}
+          {...getInputProps("name")}
         />
         <Textarea
           required
           label="Your message"
           placeholder="I want to order your goods"
-          {...form.getInputProps("message")}
+          {...getInputProps("message")}
         />
         <Center>
           <Button
@@ -98,6 +93,10 @@ const Contact: NextPage = () => {
             Send message
           </Button>
         </Center>
+        <LoadingOverlay
+          loaderProps={{ color: colors.pink[6] }}
+          visible={visible}
+        />
       </Stack>
     </form>
   );
