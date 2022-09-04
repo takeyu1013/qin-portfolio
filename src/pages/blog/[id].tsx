@@ -1,3 +1,4 @@
+import type { FC, ReactNode } from "react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import type { MicroCMSListResponse } from "microcms-js-sdk";
 
@@ -23,70 +24,72 @@ import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Blog>["contents"][number];
 
-const BlogId: NextPage<Props> = (props) => {
-  const { colors } = useMantineTheme();
+const Outer: FC<{ children: ReactNode }> = ({ children }) => {
   const largerThanXs = useMediaQuery("sm");
-  const router = useRouter();
-  const { id } = router.query;
-  const { data } = useSWR<Props>(
-    id ? `/api/blog/${id}` : null,
-    async (url) => (await fetch(url)).json(),
-    { fallbackData: props }
-  );
-
-  if (!data || !data.id) {
-    return (
-      <Group position="center" grow>
-        <Stack
-          px={16}
-          py={40}
-          className="max-w-5xl"
-          style={{ minHeight: largerThanXs ? 926 : 596 }}
-        >
-          <Center>
-            <Loader color={colors.pink[6]} />
-          </Center>
-        </Stack>
-      </Group>
-    );
-  }
-  const { title, body, publishedAt } = data;
 
   return (
     <Group position="center" grow>
       <Stack
-        spacing={20}
         px={16}
         py={40}
         className="max-w-5xl"
         style={{ minHeight: largerThanXs ? 926 : 596 }}
       >
-        <Title order={2} className="leading-10">
-          {title}
-        </Title>
-        <Divider />
-        <Stack spacing={8}>
-          <Text
-            component="time"
-            dateTime={publishedAt}
-            size="xs"
-            weight={700}
-            color={colors.dark[2]}
-          >
-            {dayjs(publishedAt).format("YYYY.MM.DD")}
-          </Text>
-          <TypographyStylesProvider>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
-          </TypographyStylesProvider>
-        </Stack>
+        {children}
       </Stack>
     </Group>
   );
 };
 
+const BlogId: NextPage<Props> = (fallbackData) => {
+  const { colors } = useMantineTheme();
+  const router = useRouter();
+  const { id } = router.query;
+  const { data } = useSWR<Props>(
+    typeof id === "string" ? `/api/blog/${id}` : null,
+    async (url) => (await fetch(url)).json(),
+    { fallbackData }
+  );
+
+  if (!data || router.isFallback) {
+    return (
+      <Outer>
+        <Center>
+          <Loader color={colors.pink[6]} />
+        </Center>
+      </Outer>
+    );
+  }
+  const { title, body, publishedAt } = data;
+
+  return (
+    <Outer>
+      <Title order={2} className="leading-10">
+        {title}
+      </Title>
+      <Divider />
+      <Stack spacing={8}>
+        <Text
+          component="time"
+          dateTime={publishedAt}
+          size="xs"
+          weight={700}
+          color={colors.dark[2]}
+        >
+          {dayjs(publishedAt).format("YYYY.MM.DD")}
+        </Text>
+        <TypographyStylesProvider>
+          <div dangerouslySetInnerHTML={{ __html: body }} />
+        </TypographyStylesProvider>
+      </Stack>
+    </Outer>
+  );
+};
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await client.getList({ endpoint: "blog" });
-  const paths = data.contents.map((content) => `/blog/${content.id}`);
+  const paths = (await client.getList({ endpoint: "blog" })).contents.map(
+    (content) => `/blog/${content.id}`
+  );
 
   return {
     paths,
@@ -103,11 +106,13 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({
     };
   }
   try {
+    const props = await client.getListDetail<Blog>({
+      endpoint: "blog",
+      contentId: params.id,
+    });
+
     return {
-      props: await client.getListDetail<Blog>({
-        endpoint: "blog",
-        contentId: params.id,
-      }),
+      props,
     };
   } catch (error) {
     return {
