@@ -44,15 +44,15 @@ const Outer: FC<{ children: ReactNode }> = ({ children }) => {
 
 const BlogId: NextPage<Props> = (fallbackData) => {
   const { colors } = useMantineTheme();
-  const router = useRouter();
-  const { id } = router.query;
+  const { query, isFallback } = useRouter();
+  const { id } = query;
   const { data } = useSWR<Props>(
     typeof id === "string" ? `/api/blog/${id}` : null,
     async (url) => (await fetch(url)).json(),
     { fallbackData }
   );
 
-  if (!data || router.isFallback) {
+  if (!data || isFallback) {
     return (
       <Outer>
         <Center>
@@ -113,7 +113,7 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({
     return {
       props,
     };
-  } catch (error) {
+  } catch {
     return {
       notFound: true,
     };
