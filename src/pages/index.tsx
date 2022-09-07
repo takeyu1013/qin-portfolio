@@ -1,6 +1,11 @@
 import type { FC } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import type { MicroCMSListResponse } from "microcms-js-sdk";
+import type {
+  TwitterResponse,
+  usersIdTweets,
+  findUserByUsername,
+} from "twitter-api-sdk/dist/types";
 
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
@@ -14,6 +19,7 @@ import {
   ColorSwatch,
   Divider,
   Group,
+  Loader,
   Progress,
   SimpleGrid,
   Stack,
@@ -25,6 +31,8 @@ import {
 } from "@mantine/core";
 import { FaTwitter, FaFacebook, FaRss } from "react-icons/fa";
 import { IconGitFork, IconStar } from "@tabler/icons";
+import useSWR from "swr";
+import dayjs from "dayjs";
 
 import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
@@ -69,6 +77,10 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
+  const { data } = useSWR<{
+    tweets: TwitterResponse<usersIdTweets>["data"];
+    user: TwitterResponse<findUserByUsername>["data"];
+  }>(`/api/tweet`, async (url) => (await fetch(url)).json());
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
@@ -210,34 +222,47 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           <Stack px={16} spacing={24}>
             <Title order={2}>Twitter</Title>
             <Divider />
-            {[...Array(3)].map((_, index) => {
-              return (
-                <Group key={index} py={16} noWrap className="items-start">
-                  <Avatar size={38} />
-                  <Stack spacing={4}>
-                    <Group spacing={8}>
-                      <Title order={5}>しまぶーのIT大学</Title>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        @shimabu_it・5月25日
-                      </Text>
-                    </Group>
-                    <TypographyStylesProvider>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            "<p>📣 新サービス「Noway Form」をリリースしました！</p><p>Noway Formは、Notionのデータベースをもとにフォームを作成できるサービスです。これまでGoogle FormsでやっていたことがNotionだけで完結します✌✨</p><p>試しに使っていただけると幸いです😊</p><p><a>https://www.noway-form.com/ja</a></p>",
-                        }}
-                      />
-                    </TypographyStylesProvider>
-                  </Stack>
-                </Group>
-              );
-            })}
+            {data ? (
+              data.tweets?.map(({ text, created_at }, index) => {
+                return (
+                  <Group key={index} py={16} noWrap className="items-start">
+                    <Avatar
+                      size={38}
+                      radius="xl"
+                      src={data.user?.profile_image_url}
+                    />
+                    <Stack spacing={4}>
+                      <Group spacing={8}>
+                        <Title order={5}>{data.user?.name}</Title>
+                        <Text size="xs" color={colors.dark[2]} weight={700}>
+                          @{data.user?.username}・
+                          {dayjs(created_at).format("M月YY日")}
+                        </Text>
+                      </Group>
+                      <TypographyStylesProvider>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: text,
+                          }}
+                        />
+                      </TypographyStylesProvider>
+                    </Stack>
+                  </Group>
+                );
+              })
+            ) : (
+              <Center>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
             <Center>
               <Button
                 color="dark"
                 variant={dark ? "white" : "filled"}
                 radius="xl"
+                component="a"
+                href={`https://twitter.com/${data?.user?.username}`}
+                target="_blank"
               >
                 View on Twitter
               </Button>
