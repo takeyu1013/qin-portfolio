@@ -11,7 +11,10 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<{
     user: TwitterResponse<findUserByUsername>["data"];
-    tweets: TwitterResponse<usersIdTweets>["data"];
+    tweets: (Exclude<
+      TwitterResponse<usersIdTweets>["data"],
+      undefined
+    >[number] & { html: string })[];
   }>
 ) => {
   const client = new Client(process.env.BEARER_TOKEN);
@@ -27,7 +30,21 @@ const handler = async (
   if (!tweets) {
     return;
   }
-  res.status(200).json({ user, tweets });
+  const embedTweets = await Promise.all(
+    tweets.map(async (tweet) => {
+      const { id } = tweet;
+      const url = `https://publish.twitter.com/oembed?url=https://twitter.com/${user.username}/status/${id}`;
+      const data = await fetch(url);
+      const { html } = await data.json();
+      if (typeof html !== "string") {
+        return { ...tweet, html: "" };
+      }
+      console.log(html);
+
+      return { ...tweet, html };
+    })
+  );
+  res.status(200).json({ user, tweets: embedTweets });
 };
 
 export default handler;

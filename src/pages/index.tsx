@@ -78,7 +78,10 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
   const { data } = useSWR<{
-    tweets: TwitterResponse<usersIdTweets>["data"];
+    tweets: (Exclude<
+      TwitterResponse<usersIdTweets>["data"],
+      undefined
+    >[number] & { html: string })[];
     user: TwitterResponse<findUserByUsername>["data"];
   }>(`/api/tweet`, async (url) => (await fetch(url)).json());
 
@@ -223,7 +226,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
             <Title order={2}>Twitter</Title>
             <Divider />
             {data ? (
-              data.tweets?.map(({ text, created_at }, index) => {
+              data.tweets?.map(({ text, created_at, html }, index) => {
                 return (
                   <Group key={index} py={16} noWrap className="items-start">
                     <Avatar
@@ -242,7 +245,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                       <TypographyStylesProvider>
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: text,
+                            __html: html,
                           }}
                         />
                       </TypographyStylesProvider>
