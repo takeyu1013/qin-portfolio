@@ -226,7 +226,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
             <Title order={2}>Twitter</Title>
             <Divider />
             {data ? (
-              data.tweets?.map(({ text, created_at, html }, index) => {
+              data.tweets.map(({ created_at, html }, index) => {
                 return (
                   <Group key={index} py={16} noWrap className="items-start">
                     <Avatar
@@ -239,7 +239,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                         <Title order={5}>{data.user?.name}</Title>
                         <Text size="xs" color={colors.dark[2]} weight={700}>
                           @{data.user?.username}・
-                          {dayjs(created_at).format("M月YY日")}
+                          {dayjs(created_at).format("M月D日")}
                         </Text>
                       </Group>
                       <TypographyStylesProvider>

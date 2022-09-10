@@ -25,8 +25,9 @@ const handler = async (
     return;
   }
   const { data: tweets } = await client.tweets.usersIdTweets(user.id, {
-    "tweet.fields": ["author_id", "created_at"],
+    "tweet.fields": ["created_at"],
   });
+
   if (!tweets) {
     return;
   }
@@ -39,8 +40,6 @@ const handler = async (
       if (typeof html !== "string") {
         return { ...tweet, html: "" };
       }
-      console.log(html);
-
       return { ...tweet, html };
     })
   );
