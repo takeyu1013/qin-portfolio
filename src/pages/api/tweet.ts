@@ -26,8 +26,8 @@ const handler = async (
   }
   const { data: tweets } = await client.tweets.usersIdTweets(user.id, {
     "tweet.fields": ["created_at"],
+    exclude: ["replies", "retweets"],
   });
-
   if (!tweets) {
     return;
   }
