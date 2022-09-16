@@ -39,11 +39,8 @@ const handler = async (
   const tweets = await Promise.all(
     data.map(async (tweet) => {
       const { id } = tweet;
-      if (!includes.users) {
-        return { ...tweet, html: "" };
-      }
       const data = await fetch(
-        `https://publish.twitter.com/oembed?url=https://twitter.com/${includes.users[0].username}/status/${id}`
+        `https://publish.twitter.com/oembed?url=https://twitter.com/${user.username}/status/${id}`
       );
       const { html } = await data.json();
       if (typeof html !== "string") {
