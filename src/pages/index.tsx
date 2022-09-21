@@ -6,6 +6,7 @@ import type {
   usersIdTweets,
   findUserByUsername,
 } from "twitter-api-sdk/dist/types";
+import type { Endpoints } from "@octokit/types";
 
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
@@ -84,6 +85,11 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
     >[number] & { html: string })[];
     user: TwitterResponse<findUserByUsername>["data"];
   }>(`/api/tweet`, async (url) => (await fetch(url)).json());
+  const { data: repos } = useSWR<
+    (Endpoints["GET /users/{username}/repos"]["response"]["data"][number] & {
+      languages: Endpoints["GET /repos/{owner}/{repo}/languages"]["response"]["data"];
+    })[]
+  >(`/api/github`, async (url) => (await fetch(url)).json());
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
@@ -154,64 +160,79 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           <Stack px={16} spacing={24}>
             <Title order={2}>GitHub</Title>
             <Divider />
-            {[...Array(largerThanXs ? 5 : 3)].map((_, index) => {
-              return (
-                <Stack key={index} py={8} spacing={8}>
-                  <Title order={4}>lightsound/nexst-tailwind</Title>
-                  <Text>Next.js starter template.</Text>
-                  <Group spacing={16}>
-                    <Group spacing={4}>
-                      <IconStar size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {117}
-                      </Text>
-                    </Group>
-                    <Group spacing={4}>
-                      <IconGitFork size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {18}
-                      </Text>
-                    </Group>
-                  </Group>
-                  <Progress
-                    sections={[
-                      { value: 65.5, color: "#3178C6" },
-                      { value: 33.7, color: "#F1E05A" },
-                      { value: 0.8, color: "#EDEDED" },
-                    ]}
-                  />
-                  <Group spacing={16}>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#3178C6" size={6} />
-                      <Text size="xs" weight={700}>
-                        TypeScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {65.5}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#F1E05A" size={6} />
-                      <Text size="xs" weight={700}>
-                        JavaScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {33.7}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#EDEDED" size={6} />
-                      <Text size="xs" weight={700}>
-                        Other
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {0.8}%
-                      </Text>
-                    </Group>
-                  </Group>
-                </Stack>
-              );
-            })}
+            {repos ? (
+              repos
+                .slice(0, largerThanXs ? 5 : 3)
+                .map(
+                  (
+                    {
+                      full_name,
+                      description,
+                      stargazers_count,
+                      forks_count,
+                      languages,
+                    },
+                    index
+                  ) => {
+                    return (
+                      <Stack key={index} py={8} spacing={8}>
+                        <Title order={4}>{full_name}</Title>
+                        <Text>{description || "No description"}</Text>
+                        <Group spacing={16}>
+                          <Group spacing={4}>
+                            <IconStar size={18} color={colors.dark[2]} />
+                            <Text size="xs" color={colors.dark[2]} weight={700}>
+                              {stargazers_count}
+                            </Text>
+                          </Group>
+                          <Group spacing={4}>
+                            <IconGitFork size={18} color={colors.dark[2]} />
+                            <Text size="xs" color={colors.dark[2]} weight={700}>
+                              {forks_count}
+                            </Text>
+                          </Group>
+                        </Group>
+                        <Progress
+                          sections={[
+                            { value: 65.5, color: "#3178C6" },
+                            { value: 33.7, color: "#F1E05A" },
+                            { value: 0.8, color: "#EDEDED" },
+                          ]}
+                        />
+                        <Group spacing={16}>
+                          {Object.keys(languages).map((language) => {
+                            return (
+                              <Group key={language} spacing={6}>
+                                <ColorSwatch color="#3178C6" size={6} />
+                                <Text size="xs" weight={700}>
+                                  {language}
+                                </Text>
+                                <Text
+                                  size="xs"
+                                  color={colors.dark[2]}
+                                  weight={700}
+                                >
+                                  {(
+                                    (languages[language] * 100) /
+                                    Object.values(languages).reduce(
+                                      (prev, current) => prev + current
+                                    )
+                                  ).toFixed(1)}
+                                  %
+                                </Text>
+                              </Group>
+                            );
+                          })}
+                        </Group>
+                      </Stack>
+                    );
+                  }
+                )
+            ) : (
+              <Center>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
             <Center>
               <Button
                 color="dark"
