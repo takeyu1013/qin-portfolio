@@ -193,11 +193,20 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                           </Group>
                         </Group>
                         <Progress
-                          sections={[
-                            { value: 65.5, color: "#3178C6" },
-                            { value: 33.7, color: "#F1E05A" },
-                            { value: 0.8, color: "#EDEDED" },
-                          ]}
+                          sections={Object.values(languages).map(
+                            (language, index) => {
+                              const colors = ["#3178C6", "#F1E05A", "#EDEDED"];
+
+                              return {
+                                value:
+                                  (language * 100) /
+                                  Object.values(languages).reduce(
+                                    (prev, current) => prev + current
+                                  ),
+                                color: colors[index],
+                              };
+                            }
+                          )}
                         />
                         <Group spacing={16}>
                           {Object.keys(languages).map((language) => {
