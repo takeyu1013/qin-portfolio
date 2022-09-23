@@ -40,6 +40,7 @@ import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
 import { client } from "src/lib/client";
+import { languageColors } from "src/lib/languageColors";
 
 export type Props = {
   blogs: MicroCMSListResponse<Blog>;
@@ -174,6 +175,15 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                     },
                     index
                   ) => {
+                    type Language = keyof typeof languageColors;
+                    const isLanguage = (
+                      language: unknown
+                    ): language is Language => {
+                      return Object.keys(languageColors).some(
+                        (element) => element === language
+                      );
+                    };
+
                     return (
                       <Stack key={index} py={8} spacing={8}>
                         <Title order={4}>{full_name}</Title>
@@ -193,26 +203,35 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                           </Group>
                         </Group>
                         <Progress
-                          sections={Object.values(languages).map(
-                            (language, index) => {
-                              const colors = ["#3178C6", "#F1E05A", "#EDEDED"];
-
+                          sections={Object.keys(languages).map((language) => {
+                            if (!isLanguage(language)) {
                               return {
-                                value:
-                                  (language * 100) /
-                                  Object.values(languages).reduce(
-                                    (prev, current) => prev + current
-                                  ),
-                                color: colors[index],
+                                value: 0,
+                                color: "",
                               };
                             }
-                          )}
+                            return {
+                              value:
+                                (languages[language] * 100) /
+                                Object.values(languages).reduce(
+                                  (prev, current) => prev + current
+                                ),
+                              color: languageColors[language].color || "",
+                            };
+                          })}
                         />
                         <Group spacing={16}>
                           {Object.keys(languages).map((language) => {
                             return (
                               <Group key={language} spacing={6}>
-                                <ColorSwatch color="#3178C6" size={6} />
+                                <ColorSwatch
+                                  color={
+                                    isLanguage(language)
+                                      ? languageColors[language].color || ""
+                                      : ""
+                                  }
+                                  size={6}
+                                />
                                 <Text size="xs" weight={700}>
                                   {language}
                                 </Text>
