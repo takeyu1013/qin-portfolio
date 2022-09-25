@@ -6,6 +6,7 @@ import type {
   usersIdTweets,
   findUserByUsername,
 } from "twitter-api-sdk/dist/types";
+import type { User } from "@octokit/graphql-schema";
 
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
@@ -84,6 +85,10 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
     >[number] & { html: string })[];
     user: TwitterResponse<findUserByUsername>["data"];
   }>(`/api/tweet`, async (url) => (await fetch(url)).json());
+  const { data: repos } = useSWR<User["repositories"]["nodes"]>(
+    `/api/github`,
+    async (url) => (await fetch(url)).json()
+  );
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
@@ -154,69 +159,96 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           <Stack px={16} spacing={24}>
             <Title order={2}>GitHub</Title>
             <Divider />
-            {[...Array(largerThanXs ? 5 : 3)].map((_, index) => {
-              return (
-                <Stack key={index} py={8} spacing={8}>
-                  <Title order={4}>lightsound/nexst-tailwind</Title>
-                  <Text>Next.js starter template.</Text>
-                  <Group spacing={16}>
-                    <Group spacing={4}>
-                      <IconStar size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {117}
-                      </Text>
+            {repos ? (
+              repos.slice(0, largerThanXs ? 5 : 3).map((repo, index) => {
+                if (!repo) {
+                  return undefined;
+                }
+                const {
+                  nameWithOwner,
+                  description,
+                  stargazerCount,
+                  forkCount,
+                  languages,
+                } = repo;
+                if (!languages) {
+                  return undefined;
+                }
+                const { totalSize, edges } = languages;
+                if (!edges) {
+                  return undefined;
+                }
+
+                return (
+                  <Stack key={index} py={8} spacing={8}>
+                    <Title order={4}>{nameWithOwner}</Title>
+                    <Text>{description || "No description"}</Text>
+                    <Group spacing={16}>
+                      <Group spacing={4}>
+                        <IconStar size={18} color={colors.dark[2]} />
+                        <Text size="xs" color={colors.dark[2]} weight={700}>
+                          {stargazerCount}
+                        </Text>
+                      </Group>
+                      <Group spacing={4}>
+                        <IconGitFork size={18} color={colors.dark[2]} />
+                        <Text size="xs" color={colors.dark[2]} weight={700}>
+                          {forkCount}
+                        </Text>
+                      </Group>
                     </Group>
-                    <Group spacing={4}>
-                      <IconGitFork size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {18}
-                      </Text>
+                    <Progress
+                      sections={edges.map((edge) => {
+                        if (!edge || !edge.node) {
+                          return { value: 0, color: "" };
+                        }
+                        const { node, size } = edge;
+                        const { color } = node;
+                        if (!color) {
+                          return { value: (size * 100) / totalSize, color: "" };
+                        }
+                        return { value: (size * 100) / totalSize, color };
+                      })}
+                    />
+                    <Group spacing={16}>
+                      {edges.map((edge, index) => {
+                        if (!edge) {
+                          return undefined;
+                        }
+                        const { node, size } = edge;
+                        if (!node) {
+                          return undefined;
+                        }
+                        const { name, color } = node;
+                        return (
+                          <Group key={index} spacing={6}>
+                            <ColorSwatch color={color || ""} size={6} />
+                            <Text size="xs" weight={700}>
+                              {name}
+                            </Text>
+                            <Text size="xs" color={colors.dark[2]} weight={700}>
+                              {((size * 100) / totalSize).toFixed(1)}%
+                            </Text>
+                          </Group>
+                        );
+                      })}
                     </Group>
-                  </Group>
-                  <Progress
-                    sections={[
-                      { value: 65.5, color: "#3178C6" },
-                      { value: 33.7, color: "#F1E05A" },
-                      { value: 0.8, color: "#EDEDED" },
-                    ]}
-                  />
-                  <Group spacing={16}>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#3178C6" size={6} />
-                      <Text size="xs" weight={700}>
-                        TypeScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {65.5}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#F1E05A" size={6} />
-                      <Text size="xs" weight={700}>
-                        JavaScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {33.7}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#EDEDED" size={6} />
-                      <Text size="xs" weight={700}>
-                        Other
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {0.8}%
-                      </Text>
-                    </Group>
-                  </Group>
-                </Stack>
-              );
-            })}
+                  </Stack>
+                );
+              })
+            ) : (
+              <Center>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
             <Center>
               <Button
                 color="dark"
                 variant={dark ? "white" : "filled"}
                 radius="xl"
+                component="a"
+                href="https://github.com/takeyu1013"
+                target="_blank"
               >
                 View on GitHub
               </Button>
