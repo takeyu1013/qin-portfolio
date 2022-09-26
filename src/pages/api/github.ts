@@ -10,7 +10,7 @@ const handler = async (
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
   });
-  const { user } = await octokit.graphql<{ user: User }>(`
+  const { user } = await octokit.graphql<{ user: User }>(`#graphql
     {
       user(login: "takeyu1013") {
         repositories(first: 5) {
