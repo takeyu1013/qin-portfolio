@@ -7,19 +7,22 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<User["repositories"]["nodes"]>
 ) => {
-  const octokit = new Octokit({
+  const {
+    user: {
+      repositories: { nodes },
+    },
+  } = await new Octokit({
     auth: process.env.GITHUB_TOKEN,
-  });
-  const { user } = await octokit.graphql<{ user: User }>(`#graphql
+  }).graphql<{ user: User }>(`#graphql
     {
       user(login: "takeyu1013") {
-        repositories(first: 5) {
+        repositories(first: 5, orderBy: {field: PUSHED_AT, direction: DESC}) {
           nodes {
             nameWithOwner
             description
             stargazerCount
             forkCount
-            languages(first: 5) {
+            languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
               edges {
                 size
                 node {
@@ -34,8 +37,6 @@ const handler = async (
       }
     }
   `);
-  const { repositories } = user;
-  const { nodes } = repositories;
 
   res.status(200).json(nodes);
 };
