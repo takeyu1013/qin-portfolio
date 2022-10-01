@@ -32,6 +32,7 @@ const handler = async (
               }
               totalSize
             }
+            url
           }
         }
       }

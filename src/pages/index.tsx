@@ -170,6 +170,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                   stargazerCount,
                   forkCount,
                   languages,
+                  url,
                 } = repo;
                 if (!languages) {
                   return undefined;
@@ -180,60 +181,69 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                 }
 
                 return (
-                  <Stack key={index} py={8} spacing={8}>
-                    <Title order={4}>{nameWithOwner}</Title>
-                    <Text>{description || "No description"}</Text>
-                    <Group spacing={16}>
-                      <Group spacing={4}>
-                        <IconStar size={18} color={colors.dark[2]} />
-                        <Text size="xs" color={colors.dark[2]} weight={700}>
-                          {stargazerCount}
-                        </Text>
+                  <Anchor key={index} href={url} target="_blank" variant="text">
+                    <Stack key={index} py={8} spacing={8}>
+                      <Title order={4}>{nameWithOwner}</Title>
+                      <Text>{description || "No description"}</Text>
+                      <Group spacing={16}>
+                        <Group spacing={4}>
+                          <IconStar size={18} color={colors.dark[2]} />
+                          <Text size="xs" color={colors.dark[2]} weight={700}>
+                            {stargazerCount}
+                          </Text>
+                        </Group>
+                        <Group spacing={4}>
+                          <IconGitFork size={18} color={colors.dark[2]} />
+                          <Text size="xs" color={colors.dark[2]} weight={700}>
+                            {forkCount}
+                          </Text>
+                        </Group>
                       </Group>
-                      <Group spacing={4}>
-                        <IconGitFork size={18} color={colors.dark[2]} />
-                        <Text size="xs" color={colors.dark[2]} weight={700}>
-                          {forkCount}
-                        </Text>
+                      <Progress
+                        sections={edges.map((edge) => {
+                          if (!edge || !edge.node) {
+                            return { value: 0, color: "" };
+                          }
+                          const { node, size } = edge;
+                          const { color } = node;
+                          if (!color) {
+                            return {
+                              value: (size * 100) / totalSize,
+                              color: "",
+                            };
+                          }
+                          return { value: (size * 100) / totalSize, color };
+                        })}
+                      />
+                      <Group spacing={16}>
+                        {edges.map((edge, index) => {
+                          if (!edge) {
+                            return undefined;
+                          }
+                          const { node, size } = edge;
+                          if (!node) {
+                            return undefined;
+                          }
+                          const { name, color } = node;
+                          return (
+                            <Group key={index} spacing={6}>
+                              <ColorSwatch color={color || ""} size={6} />
+                              <Text size="xs" weight={700}>
+                                {name}
+                              </Text>
+                              <Text
+                                size="xs"
+                                color={colors.dark[2]}
+                                weight={700}
+                              >
+                                {((size * 100) / totalSize).toFixed(1)}%
+                              </Text>
+                            </Group>
+                          );
+                        })}
                       </Group>
-                    </Group>
-                    <Progress
-                      sections={edges.map((edge) => {
-                        if (!edge || !edge.node) {
-                          return { value: 0, color: "" };
-                        }
-                        const { node, size } = edge;
-                        const { color } = node;
-                        if (!color) {
-                          return { value: (size * 100) / totalSize, color: "" };
-                        }
-                        return { value: (size * 100) / totalSize, color };
-                      })}
-                    />
-                    <Group spacing={16}>
-                      {edges.map((edge, index) => {
-                        if (!edge) {
-                          return undefined;
-                        }
-                        const { node, size } = edge;
-                        if (!node) {
-                          return undefined;
-                        }
-                        const { name, color } = node;
-                        return (
-                          <Group key={index} spacing={6}>
-                            <ColorSwatch color={color || ""} size={6} />
-                            <Text size="xs" weight={700}>
-                              {name}
-                            </Text>
-                            <Text size="xs" color={colors.dark[2]} weight={700}>
-                              {((size * 100) / totalSize).toFixed(1)}%
-                            </Text>
-                          </Group>
-                        );
-                      })}
-                    </Group>
-                  </Stack>
+                    </Stack>
+                  </Anchor>
                 );
               })
             ) : (
