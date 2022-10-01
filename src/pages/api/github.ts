@@ -16,7 +16,7 @@ const handler = async (
   }).graphql<{ user: User }>(`#graphql
     {
       user(login: "takeyu1013") {
-        repositories(first: 5, orderBy: {field: PUSHED_AT, direction: DESC}) {
+        repositories(first: 5, privacy: PUBLIC, orderBy: {field: PUSHED_AT, direction: DESC}) {
           nodes {
             nameWithOwner
             description
