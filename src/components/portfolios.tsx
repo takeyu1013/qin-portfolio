@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { MicroCMSListResponse } from "microcms-js-sdk";
+import type { MicroCMSListResponse, MicroCMSImage } from "microcms-js-sdk";
 
 import {
   Anchor,
@@ -16,11 +16,7 @@ export type Portfolio = {
   title: string;
   content: string;
   link: string;
-  image: {
-    url: string;
-    height: number;
-    width: number;
-  };
+  image: MicroCMSImage;
   startAt: string;
   endAt: string;
 };
