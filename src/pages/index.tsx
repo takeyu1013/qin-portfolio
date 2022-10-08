@@ -181,7 +181,13 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                 }
 
                 return (
-                  <Anchor key={index} href={url} target="_blank" variant="text">
+                  <Anchor
+                    key={index}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="text"
+                  >
                     <Stack key={index} py={8} spacing={8}>
                       <Title order={4}>{nameWithOwner}</Title>
                       <Text>{description || "No description"}</Text>
@@ -201,7 +207,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                       </Group>
                       <Progress
                         sections={edges.map((edge) => {
-                          if (!edge || !edge.node) {
+                          if (!edge) {
                             return { value: 0, color: "" };
                           }
                           const { node, size } = edge;
@@ -259,6 +265,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                 component="a"
                 href="https://github.com/takeyu1013"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 View on GitHub
               </Button>
@@ -275,6 +282,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                     href={`https://twitter.com/${data.user?.username}/status/${id}`}
                     variant="text"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <Group py={16} noWrap className="items-start">
                       <Avatar
@@ -317,6 +325,7 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                 component="a"
                 href={`https://twitter.com/${data?.user?.username}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 View on Twitter
               </Button>
