@@ -78,16 +78,17 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
+  const fetcher = async (url: string) => (await fetch(url)).json();
   const { data } = useSWR<{
     tweets: (Exclude<
       TwitterResponse<usersIdTweets>["data"],
       undefined
     >[number] & { html: string })[];
     user: TwitterResponse<findUserByUsername>["data"];
-  }>(`/api/tweet`, async (url) => (await fetch(url)).json());
+  }>(`/api/tweet`, fetcher);
   const { data: repos } = useSWR<User["repositories"]["nodes"]>(
     `/api/github`,
-    async (url) => (await fetch(url)).json()
+    fetcher
   );
 
   return (
