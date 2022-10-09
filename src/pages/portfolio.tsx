@@ -18,6 +18,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
+import { fetcher } from "src/lib/fetcher";
 import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Portfolio>;
@@ -34,7 +35,7 @@ const Portfolio: NextPage<Props> = (props) => {
       }
       return `/api/portfolio?offset=${index * 10}`;
     },
-    async (url) => (await fetch(url)).json(),
+    fetcher,
     { fallbackData: [props] }
   );
   const loading = !error && (!data || isValidating);

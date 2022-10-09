@@ -6,6 +6,7 @@ import type {
   usersIdTweets,
   findUserByUsername,
 } from "twitter-api-sdk/dist/types";
+import type { User } from "@octokit/graphql-schema";
 
 import type { Blog } from "src/components/blogs";
 import type { Portfolio } from "src/components/portfolios";
@@ -38,6 +39,7 @@ import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
+import { fetcher } from "src/lib/fetcher";
 import { client } from "src/lib/client";
 
 export type Props = {
@@ -77,13 +79,17 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
-  const { data } = useSWR<{
+  const { data: twitter } = useSWR<{
     tweets: (Exclude<
       TwitterResponse<usersIdTweets>["data"],
       undefined
     >[number] & { html: string })[];
     user: TwitterResponse<findUserByUsername>["data"];
-  }>(`/api/tweet`, async (url) => (await fetch(url)).json());
+  }>(`/api/tweet`, fetcher);
+  const { data: repos } = useSWR<User["repositories"]["nodes"]>(
+    `/api/github`,
+    fetcher
+  );
 
   return (
     <Stack pb={40} spacing={largerThanXs ? 80 : 40}>
@@ -154,111 +160,96 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
           <Stack px={16} spacing={24}>
             <Title order={2}>GitHub</Title>
             <Divider />
-            {[...Array(largerThanXs ? 5 : 3)].map((_, index) => {
-              return (
-                <Stack key={index} py={8} spacing={8}>
-                  <Title order={4}>lightsound/nexst-tailwind</Title>
-                  <Text>Next.js starter template.</Text>
-                  <Group spacing={16}>
-                    <Group spacing={4}>
-                      <IconStar size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {117}
-                      </Text>
-                    </Group>
-                    <Group spacing={4}>
-                      <IconGitFork size={18} color={colors.dark[2]} />
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {18}
-                      </Text>
-                    </Group>
-                  </Group>
-                  <Progress
-                    sections={[
-                      { value: 65.5, color: "#3178C6" },
-                      { value: 33.7, color: "#F1E05A" },
-                      { value: 0.8, color: "#EDEDED" },
-                    ]}
-                  />
-                  <Group spacing={16}>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#3178C6" size={6} />
-                      <Text size="xs" weight={700}>
-                        TypeScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {65.5}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#F1E05A" size={6} />
-                      <Text size="xs" weight={700}>
-                        JavaScript
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {33.7}%
-                      </Text>
-                    </Group>
-                    <Group spacing={6}>
-                      <ColorSwatch color="#EDEDED" size={6} />
-                      <Text size="xs" weight={700}>
-                        Other
-                      </Text>
-                      <Text size="xs" color={colors.dark[2]} weight={700}>
-                        {0.8}%
-                      </Text>
-                    </Group>
-                  </Group>
-                </Stack>
-              );
-            })}
-            <Center>
-              <Button
-                color="dark"
-                variant={dark ? "white" : "filled"}
-                radius="xl"
-              >
-                View on GitHub
-              </Button>
-            </Center>
-          </Stack>
-          <Stack px={16} spacing={24}>
-            <Title order={2}>Twitter</Title>
-            <Divider />
-            {data ? (
-              data.tweets.slice(0, 3).map(({ id, created_at, html }, index) => {
+            {repos ? (
+              repos.slice(0, largerThanXs ? 5 : 3).map((repo, index) => {
+                if (!repo) {
+                  return undefined;
+                }
+                const {
+                  nameWithOwner,
+                  description,
+                  stargazerCount,
+                  forkCount,
+                  languages,
+                  url,
+                } = repo;
+                if (!languages) {
+                  return undefined;
+                }
+                const { totalSize, edges } = languages;
+                if (!edges) {
+                  return undefined;
+                }
+
                 return (
                   <Anchor
                     key={index}
-                    href={`https://twitter.com/${data.user?.username}/status/${id}`}
-                    variant="text"
+                    href={url}
                     target="_blank"
+                    rel="noopener noreferrer"
+                    variant="text"
                   >
-                    <Group py={16} noWrap className="items-start">
-                      <Avatar
-                        size={38}
-                        radius="xl"
-                        src={data.user?.profile_image_url}
-                      />
-                      <Stack spacing={4}>
-                        <Group spacing={8}>
-                          <Title order={5}>{data.user?.name}</Title>
+                    <Stack key={index} py={8} spacing={8}>
+                      <Title order={4}>{nameWithOwner}</Title>
+                      <Text>{description || "No description"}</Text>
+                      <Group spacing={16}>
+                        <Group spacing={4}>
+                          <IconStar size={18} color={colors.dark[2]} />
                           <Text size="xs" color={colors.dark[2]} weight={700}>
-                            @{data.user?.username}・
-                            {dayjs(created_at).format("M月D日")}
+                            {stargazerCount}
                           </Text>
                         </Group>
-                        <TypographyStylesProvider>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: html
-                                .split(`<blockquote class="twitter-tweet">`)[1]
-                                .split("&mdash;")[0],
-                            }}
-                          />
-                        </TypographyStylesProvider>
-                      </Stack>
-                    </Group>
+                        <Group spacing={4}>
+                          <IconGitFork size={18} color={colors.dark[2]} />
+                          <Text size="xs" color={colors.dark[2]} weight={700}>
+                            {forkCount}
+                          </Text>
+                        </Group>
+                      </Group>
+                      <Progress
+                        sections={edges.map((edge) => {
+                          if (!edge) {
+                            return { value: 0, color: "" };
+                          }
+                          const { node, size } = edge;
+                          const { color } = node;
+                          if (!color) {
+                            return {
+                              value: (size * 100) / totalSize,
+                              color: "",
+                            };
+                          }
+                          return { value: (size * 100) / totalSize, color };
+                        })}
+                      />
+                      <Group spacing={16}>
+                        {edges.map((edge, index) => {
+                          if (!edge) {
+                            return undefined;
+                          }
+                          const { node, size } = edge;
+                          if (!node) {
+                            return undefined;
+                          }
+                          const { name, color } = node;
+                          return (
+                            <Group key={index} spacing={6}>
+                              <ColorSwatch color={color || ""} size={6} />
+                              <Text size="xs" weight={700}>
+                                {name}
+                              </Text>
+                              <Text
+                                size="xs"
+                                color={colors.dark[2]}
+                                weight={700}
+                              >
+                                {((size * 100) / totalSize).toFixed(1)}%
+                              </Text>
+                            </Group>
+                          );
+                        })}
+                      </Group>
+                    </Stack>
                   </Anchor>
                 );
               })
@@ -273,8 +264,73 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
                 variant={dark ? "white" : "filled"}
                 radius="xl"
                 component="a"
-                href={`https://twitter.com/${data?.user?.username}`}
+                href="https://github.com/takeyu1013"
                 target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on GitHub
+              </Button>
+            </Center>
+          </Stack>
+          <Stack px={16} spacing={24}>
+            <Title order={2}>Twitter</Title>
+            <Divider />
+            {twitter ? (
+              twitter.tweets
+                .slice(0, 3)
+                .map(({ id, created_at, html }, index) => {
+                  return (
+                    <Anchor
+                      key={index}
+                      href={`https://twitter.com/${twitter.user?.username}/status/${id}`}
+                      variant="text"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Group py={16} noWrap className="items-start">
+                        <Avatar
+                          size={38}
+                          radius="xl"
+                          src={twitter.user?.profile_image_url}
+                        />
+                        <Stack spacing={4}>
+                          <Group spacing={8}>
+                            <Title order={5}>{twitter.user?.name}</Title>
+                            <Text size="xs" color={colors.dark[2]} weight={700}>
+                              @{twitter.user?.username}・
+                              {dayjs(created_at).format("M月D日")}
+                            </Text>
+                          </Group>
+                          <TypographyStylesProvider>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: html
+                                  .split(
+                                    `<blockquote class="twitter-tweet">`
+                                  )[1]
+                                  .split("&mdash;")[0],
+                              }}
+                            />
+                          </TypographyStylesProvider>
+                        </Stack>
+                      </Group>
+                    </Anchor>
+                  );
+                })
+            ) : (
+              <Center>
+                <Loader color={colors.pink[6]} />
+              </Center>
+            )}
+            <Center>
+              <Button
+                color="dark"
+                variant={dark ? "white" : "filled"}
+                radius="xl"
+                component="a"
+                href={`https://twitter.com/${twitter?.user?.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 View on Twitter
               </Button>

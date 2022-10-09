@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { MicroCMSListResponse } from "microcms-js-sdk";
+import type { MicroCMSListResponse, MicroCMSImage } from "microcms-js-sdk";
 
 import {
   Anchor,
@@ -16,11 +16,7 @@ export type Portfolio = {
   title: string;
   content: string;
   link: string;
-  image: {
-    url: string;
-    height: number;
-    width: number;
-  };
+  image: MicroCMSImage;
   startAt: string;
   endAt: string;
 };
@@ -35,9 +31,7 @@ export const Portfolios: FC<{
     <>
       {contents
         .slice(0, size)
-        .map(({ id, image, title, link, content, startAt, endAt }) => {
-          const { url } = image;
-
+        .map(({ id, image: { url }, title, link, content, startAt, endAt }) => {
           return (
             <Anchor key={id} href={link} target="_blank" variant="text">
               <Stack spacing={8}>

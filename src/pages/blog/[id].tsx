@@ -20,6 +20,7 @@ import useSWR from "swr";
 import dayjs from "dayjs";
 
 import { useMediaQuery } from "src/lib/mantine";
+import { fetcher } from "src/lib/fetcher";
 import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Blog>["contents"][number];
@@ -44,11 +45,13 @@ const Outer: FC<{ children: ReactNode }> = ({ children }) => {
 
 const BlogId: NextPage<Props> = (fallbackData) => {
   const { colors } = useMantineTheme();
-  const { query, isFallback } = useRouter();
-  const { id } = query;
+  const {
+    query: { id },
+    isFallback,
+  } = useRouter();
   const { data } = useSWR<Props>(
     typeof id === "string" ? `/api/blog/${id}` : null,
-    async (url) => (await fetch(url)).json(),
+    fetcher,
     { fallbackData }
   );
 
