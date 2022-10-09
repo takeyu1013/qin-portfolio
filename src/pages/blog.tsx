@@ -17,6 +17,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 
 import { Blogs } from "src/components/blogs";
 import { useMediaQuery } from "src/lib/mantine";
+import { fetcher } from "src/lib/fetcher";
 import { client } from "src/lib/client";
 
 type Props = MicroCMSListResponse<Blog>;
@@ -33,7 +34,7 @@ const Blog: NextPage<Props> = (props) => {
       }
       return `/api/blog?offset=${index * 10}`;
     },
-    async (url) => (await fetch(url)).json(),
+    fetcher,
     { fallbackData: [props] }
   );
   const loading = !error && (!data || isValidating);

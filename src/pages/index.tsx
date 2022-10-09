@@ -39,6 +39,7 @@ import { Button } from "src/lib/mantine/Button";
 import { Blogs } from "src/components/blogs";
 import { Portfolios } from "src/components/portfolios";
 import { useMediaQuery } from "src/lib/mantine";
+import { fetcher } from "src/lib/fetcher";
 import { client } from "src/lib/client";
 
 export type Props = {
@@ -78,7 +79,6 @@ const Home: NextPage<Props> = ({ blogs, portfolios }) => {
   const largerThanXs = useMediaQuery("sm");
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
-  const fetcher = async (url: string) => (await fetch(url)).json();
   const { data: twitter } = useSWR<{
     tweets: (Exclude<
       TwitterResponse<usersIdTweets>["data"],
